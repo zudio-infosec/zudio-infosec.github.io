@@ -24,6 +24,7 @@ Gujranwala, Pakistan → Targeting UK
 .
 ├── index.html       # Main portfolio page
 ├── blog.html        # CTF writeups & security notes
+├── ohsint.html      # Walkthrough Ohsint at TryHackMe
 └── README.md        # This file
 ```
 
