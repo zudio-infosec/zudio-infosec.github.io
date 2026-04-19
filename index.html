@@ -121,7 +121,7 @@
     text-decoration: none;
     font-family: var(--mono);
     font-size: 0.75rem;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     transition: color 0.3s;
     position: relative;
@@ -810,6 +810,93 @@
     section { padding: 70px 24px; }
     #about-wrap, #skills-wrap, #projects-wrap, #writeups-wrap, #platforms-wrap { padding: 70px 24px; }
     .writeup-cat, .writeup-date { display: none; }
+    .writeup-item { padding: 16px; min-height: 48px; }
+    #float-term-btn { display: none; }
+    #float-terminal { display: none; }
+    #boot-screen { padding: 40px 24px; font-size: 0.72rem; }
+    .boot-line.white { font-size: 0.9rem; }
+    .social-pill { padding: 8px 12px; min-height: 36px; }
+  }
+
+  /* HAMBURGER MENU */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    padding: 6px;
+    z-index: 102;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--green);
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* MOBILE NAV DRAWER */
+  .nav-drawer {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(2,6,2,0.97);
+    z-index: 101;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    backdrop-filter: blur(16px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .nav-drawer.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .nav-drawer a {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    padding: 8px 0;
+  }
+  .nav-drawer a:hover, .nav-drawer a.active { color: var(--green); }
+  .nav-drawer .drawer-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    color: var(--green);
+    background: none;
+    border: none;
+    cursor: none;
+    padding: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .nav-drawer { display: flex; }
+    body { cursor: auto; }
+    #cursor, #cursor-trail { display: none; }
+  }
+
+  /* HIDE CURSOR ON TOUCH DEVICES */
+  @media (hover: none) and (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor, #cursor-trail { display: none !important; }
+    #float-term-btn { display: none; }
+    #float-terminal { display: none; }
   }
 </style>
 </head>
@@ -851,6 +938,18 @@
 <canvas id="matrix-bg"></canvas>
 
 <!-- NAV -->
+<!-- MOBILE NAV DRAWER -->
+<div class="nav-drawer" id="nav-drawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  <a href="#" onclick="closeDrawer()">Home</a>
+  <a href="#about-wrap" onclick="closeDrawer()">About</a>
+  <a href="#skills-wrap" onclick="closeDrawer()">Skills</a>
+  <a href="#projects-wrap" onclick="closeDrawer()">Projects</a>
+  <a href="#writeups-wrap" onclick="closeDrawer()">Writeups</a>
+  <a href="blog.html" data-internal onclick="closeDrawer()">Blog</a>
+  <a href="https://github.com/zudio-infosec" target="_blank">GitHub</a>
+</div>
+
 <nav>
   <a href="#" class="nav-logo">ZUD<span>IO</span></a>
   <ul class="nav-links">
@@ -866,6 +965,9 @@
     <div class="status-dot"></div>
     OPEN TO INTERNSHIPS
   </div>
+  <button class="hamburger" id="hamburger" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -1091,6 +1193,24 @@
 </footer>
 
 <script>
+  // ── HAMBURGER MENU ──
+  function toggleDrawer() {
+    const drawer = document.getElementById('nav-drawer');
+    const burger = document.getElementById('hamburger');
+    const isOpen = drawer.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeDrawer() {
+    const drawer = document.getElementById('nav-drawer');
+    const burger = document.getElementById('hamburger');
+    drawer.classList.remove('open');
+    burger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // Close drawer on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
   // ── BOOT SCREEN ──
   // Show on: fresh visit, refresh, external link (Instagram etc.)
   // Skip on: internal navigation between pages
