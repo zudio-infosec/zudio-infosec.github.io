@@ -5,7 +5,7 @@
 Personal portfolio showcasing security research, CTF writeups, and offensive security projects.
 
 ## 📍 Location
-Gujranwala, Pakistan → Targeting UK
+Pakistan → Targeting UK
 
 ## 🎯 About
 18-year-old security researcher breaking things ethically. Focused on:
@@ -37,7 +37,7 @@ https://zudio-infosec.github.io/
 - **LinkedIn**: https://www.linkedin.com/in/hasham-javed-a03424400/
 - **TryHackMe**: https://tryhackme.com/p/zudio001
 - **Instagram**: https://www.instagram.com/zudio.infosec
-- **YouTube**: https://www.youtube.com/@Zudio001
+- **YouTube**: https://www.youtube.com/@zudio-infosec
 
 ## 📊 Stats
 - 2+ years learning cybersecurity
