@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zudio | Blog — CTF Writeups & Security Notes</title>
-<meta name="description" content="CTF writeups, OSINT walkthroughs, tool breakdowns and security notes by Hasham Javed (Zudio) — cybersecurity student from Pakistan.">
+<meta name="description" content="CTF writeups, OSINT walkthroughs, tool breakdowns and security notes by Hasham Javed (Zudio) — cybersecurity student from Pakistan. Learn ethical hacking, penetration testing, Python security tools.">
+<meta name="keywords" content="Zudio, zudio infosec, cybersecurity blog, CTF writeups, ethical hacking, OSINT, penetration testing, PicoCTF, TryHackMe, HackTheBox, security tutorials, bug bounty, red team, Kali Linux, Python hacking tools, offensive security, Pakistan hacker, hacking form, cyber security learning">
 <meta name="author" content="Hasham Javed">
 <meta property="og:title" content="Zudio | Blog — CTF Writeups & Security Notes">
 <meta property="og:description" content="CTF writeups, OSINT walkthroughs, tool breakdowns and security notes.">
@@ -156,6 +157,12 @@
   .nl-btn { background: var(--green); color: var(--dark); border: none; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; padding: 12px 20px; cursor: none; transition: all 0.3s; white-space: nowrap; }
   .nl-btn:hover { box-shadow: 0 0 20px rgba(0,255,65,0.4); }
   .nl-note { font-family: var(--mono); font-size: 0.58rem; color: rgba(0,255,65,0.25); margin-top: 12px; }
+  .nl-thanks { display: none; text-align: center; padding: 30px 20px; animation: fadeUp 0.6s ease; }
+  .nl-thanks.show { display: block; }
+  .thanks-icon { display: block; font-size: 2.5rem; color: var(--green); margin-bottom: 10px; animation: popIn 0.5s ease; }
+  .thanks-text { display: block; font-family: var(--display); font-size: 1.4rem; color: var(--green); letter-spacing: 2px; margin-bottom: 8px; }
+  .thanks-sub { display: block; font-family: var(--mono); font-size: 0.7rem; color: var(--text); opacity: 0.7; }
+  @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
 
   /* FOOTER */
   footer { position: relative; z-index: 2; border-top: 1px solid var(--border); padding: 60px 40px; text-align: center; background: var(--darker); }
@@ -364,13 +371,18 @@
   </div>
 
   <!-- NEWSLETTER / RSS -->
-  <div class="newsletter">
+  <div class="newsletter" id="newsletter">
     <div class="nl-title">STAY UPDATED</div>
     <p class="nl-sub">New writeups, tools, and learning notes — as I publish them.<br>No spam. Just raw cybersecurity content.</p>
-    <form action="https://formspree.io/f/xwvabbwp" method="POST" class="nl-row">
+    <form action="https://formspree.io/f/xwvabbwp" method="POST" class="nl-row" id="nl-form">
       <input class="nl-input" type="email" name="email" placeholder="your@email.com" required>
       <button class="nl-btn" type="submit">SUBSCRIBE</button>
     </form>
+    <div class="nl-thanks" id="nl-thanks">
+      <span class="thanks-icon">✓</span>
+      <span class="thanks-text">ThankYou for Subscribing!</span>
+      <span class="thanks-sub">You'll receive updates when I publish new content.</span>
+    </div>
     <div class="nl-note">// Powered by curiosity. No tracking.</div>
   </div>
 
@@ -478,15 +490,35 @@
   document.querySelectorAll('.post-card').forEach((el,i) => el.style.transitionDelay=(i*0.1)+'s');
   document.querySelectorAll('.cs-card').forEach((el,i) => el.style.transitionDelay=(i*0.08)+'s');
 
-  // ── NEWSLETTER ──
-  document.querySelector('.nl-btn').addEventListener('click', () => {
-    const input = document.querySelector('.nl-input');
-    if (input.value.includes('@')) {
-      document.querySelector('.nl-note').textContent = "// Subscribed! Thanks — I'll be in touch.";
-      document.querySelector('.nl-note').style.color = 'var(--green)';
-      input.value = '';
-    }
-  });
+  // ── NEWSLETTER WITH FORMSPREE ──
+  const nlForm = document.getElementById('nl-form');
+  const nlThanks = document.getElementById('nl-thanks');
+  if (nlForm) {
+    nlForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = nlForm.querySelector('.nl-btn');
+      const originalText = btn.textContent;
+      btn.textContent = 'SENDING...';
+      btn.disabled = true;
+      try {
+        const response = await fetch(nlForm.action, {
+          method: 'POST',
+          body: new FormData(nlForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (response.ok) {
+          nlForm.style.display = 'none';
+          nlThanks.classList.add('show');
+        } else {
+          btn.textContent = 'ERROR';
+          setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+        }
+      } catch (err) {
+        btn.textContent = 'ERROR';
+        setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2000);
+      }
+    });
+  }
 </script>
 </body>
 </html>
