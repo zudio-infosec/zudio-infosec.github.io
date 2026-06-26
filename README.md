@@ -35,7 +35,7 @@ https://zudio-infosec.github.io/
 - **Email**: zudio001@proton.me
 - **GitHub**: https://github.com/zudio-infosec
 - **LinkedIn**: https://www.linkedin.com/in/hasham-javed-a03424400/
-- **TryHackMe**: https://tryhackme.com/p/zudio001
+- **TryHackMe**: https://tryhackme.com/p/zudio.infosec
 - **Instagram**: https://www.instagram.com/zudio.infosec
 - **YouTube**: https://www.youtube.com/@zudio-infosec
 
