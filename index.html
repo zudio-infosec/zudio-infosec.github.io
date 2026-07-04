@@ -792,6 +792,57 @@
     flex: 1; caret-color: var(--green);
   }
 
+  /* PROGRESS */
+  #progress-wrap { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+  .progress-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .progress-card {
+    border: 1px solid var(--border);
+    padding: 28px 28px 22px;
+    background: var(--panel);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--green), transparent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .progress-card:hover { border-color: rgba(0,255,65,0.5); }
+  .progress-card:hover::before { transform: scaleX(1); }
+  .progress-card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+    font-family: var(--mono); font-size: 0.7rem;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .progress-platform { color: var(--green); }
+  .progress-status { color: rgba(0,255,65,0.5); font-size: 0.6rem; }
+  .progress-path { list-style: none; padding: 0; margin: 0 0 18px; }
+  .progress-path li {
+    font-family: var(--mono); font-size: 0.85rem;
+    color: var(--text);
+    padding: 6px 0;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid rgba(0,255,65,0.05);
+  }
+  .progress-path li:last-child { border-bottom: none; }
+  .progress-path .pmark { color: var(--cyan); width: 14px; display: inline-block; text-align: center; }
+  .progress-path li.done { color: rgba(0,255,65,0.5); }
+  .progress-path li.done .pmark { color: var(--green); }
+  .progress-path li.current { color: #fff; }
+  .progress-path li.current .pmark { color: var(--green); text-shadow: 0 0 8px var(--green); }
+  .progress-card-foot { padding-top: 6px; border-top: 1px solid rgba(0,255,65,0.08); }
+  .progress-link {
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--cyan); letter-spacing: 1.5px;
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .progress-link:hover { color: var(--green); }
+
   /* SOCIAL PILLS */
   .footer-social { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
   .social-pill {
@@ -803,6 +854,7 @@
 
   @media (max-width: 768px) {
     nav { padding: 14px 20px; }
+    .progress-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
     #hero { padding-left: 24px; padding-right: 24px; }
     .hero-terminal { display: none; }
@@ -1088,7 +1140,7 @@
       <div class="project-name">CTF WRITEUPS</div>
       <p class="project-desc">Documented solutions for PicoCTF and TryHackMe challenges. Learn-in-public approach — sharing techniques, thought processes, and building a knowledge base.</p>
       <div class="project-footer">
-        <span class="project-link">6 writeups published</span>
+        <span class="project-link" id="writeup-count" data-loading>…</span>
         <div class="project-arrow">→</div>
       </div>
     </a>
@@ -1152,6 +1204,49 @@
       <div class="platform-name">HACKTHEBOX</div>
       <div class="platform-status">FREE TIER</div>
     </a>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="progress-wrap">
+  <div class="section-header reveal">
+    <span class="section-num">06</span>
+    <h2 class="section-title">CURRENT PROGRESS</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="progress-grid">
+    <div class="progress-card reveal reveal-delay-1">
+      <div class="progress-card-head">
+        <span class="progress-platform">🎯 TryHackMe — Level 2 Path</span>
+        <span class="progress-status">in progress</span>
+      </div>
+      <ol class="progress-path">
+        <li class="done"><span class="pmark">✓</span> Nmap</li>
+        <li class="done"><span class="pmark">✓</span> Metasploit</li>
+        <li class="current"><span class="pmark">▸</span> Hydra</li>
+        <li><span class="pmark">○</span> Vulnversity</li>
+        <li><span class="pmark">○</span> Blue</li>
+        <li><span class="pmark">○</span> Linux PrivEsc</li>
+      </ol>
+      <div class="progress-card-foot">
+        <a href="https://tryhackme.com/p/zudio.infosec" target="_blank" class="progress-link">view live profile →</a>
+      </div>
+    </div>
+    <div class="progress-card reveal reveal-delay-2">
+      <div class="progress-card-head">
+        <span class="progress-platform">🕷️ PortSwigger — Web Security Academy</span>
+        <span class="progress-status">labs ongoing</span>
+      </div>
+      <ol class="progress-path">
+        <li class="done"><span class="pmark">✓</span> SQLi Labs 1–5</li>
+        <li class="current"><span class="pmark">▸</span> SQLi Lab 6 (PostgreSQL)</li>
+        <li><span class="pmark">○</span> Access Control</li>
+        <li><span class="pmark">○</span> File Upload Vulns</li>
+      </ol>
+      <div class="progress-card-foot">
+        <a href="https://portswigger.net/web-security" target="_blank" class="progress-link">view academy →</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1441,7 +1536,7 @@
       {t:'',      v:'     nmap • whois • amass • dig • nikto • curl'},
       {t:'cyan',  v:'     → github.com/zudio-infosec/zudio-recon-framework'},
       {t:'green', v:'[02] ctf-writeups'},
-      {t:'',      v:'     6 writeups — PicoCTF & TryHackMe'},
+      {t:'',      v:'     multiple writeups — PicoCTF & TryHackMe'},
       {t:'cyan',  v:'     → github.com/zudio-infosec/ctf-writeups'},
     ],
     writeups: () => [
@@ -1450,7 +1545,7 @@
       {t:'cyan',  v:'  [PicoCTF]     OTP Bypass — Web Exploitation          Apr 2026'},
       {t:'cyan',  v:'  [TryHackMe]   HTTP in Detail — Networking             Apr 2026'},
       {t:'cyan',  v:'  [PicoCTF]     Multi-Layer Hash Cracking — Crypto      Apr 2026'},
-      {t:'dim',   v:'  + 3 more → github.com/zudio-infosec/ctf-writeups'},
+      {t:'dim',   v:'  + 4 more → github.com/zudio-infosec/ctf-writeups'},
     ],
     contact: () => [
       {t:'green', v:'── CONTACT ──'},
@@ -1464,8 +1559,7 @@
       {t:'green', v:'── CURRENT STATUS ──'},
       {t:'green', v:'  ● ACTIVE'},
       {t:'',      v:'  Learning:  OSINT, Web Exploitation, Python tooling'},
-      {t:'',      v:'  Platform:  TryHackMe — OhSINT room (in progress)'},
-      {t:'',      v:'  Studying:  ICS 2nd Year — Exams: 20 May 2026'},
+      {t:'',      v:'  Platform:  TryHackMe — active, building L2 path'},
       {t:'',      v:'  Building:  zudio-recon-framework v2'},
       {t:'cyan',  v:'  Target:    UK cybersecurity internship 2026'},
     ],
@@ -1541,6 +1635,25 @@
     if (e.key === 'Escape') toggleTerm();
   });
   document.getElementById('float-terminal').addEventListener('click', () => termInput.focus());
+
+  // ── LIVE WRITEUP COUNT (GitHub Contents API, no auth, CORS open) ──
+  (async function loadWriteupCount() {
+    const el = document.getElementById('writeup-count');
+    if (!el) return;
+    try {
+      const r = await fetch('https://api.github.com/repos/zudio-infosec/ctf-writeups/contents/');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const files = await r.json();
+      const count = files.filter(f =>
+        f.type === 'file' && f.name.endsWith('.md') && f.name.toLowerCase() !== 'readme.md'
+      ).length;
+      el.textContent = count + (count === 1 ? ' writeup published' : ' writeups published');
+      el.removeAttribute('data-loading');
+    } catch (e) {
+      el.textContent = '— writeups (offline)';
+      el.removeAttribute('data-loading');
+    }
+  })();
 
   // ── COUNTER ANIMATION ──
   function animateCounters() {
