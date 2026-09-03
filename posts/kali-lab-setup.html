@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Kali Linux Lab Setup — Isolated Pentest Environment | Zudio</title>
+<meta name="description" content="How I built an isolated VirtualBox lab on Kali Linux — Windows 7/10/11 and Metasploitable-2 guest VMs, NAT-isolated networking, snapshot-based clean states — to study how Windows Defender and Google Play Protect detect and respond to RATs like NjRAT, CraxRat, AhMyth, and 888RAT.">
+<meta name="keywords" content="Kali Linux, VirtualBox lab, penetration testing lab, Windows Defender, Google Play Protect, RAT analysis, NjRAT, CraxRat, AhMyth RAT, 888RAT, malware analysis, red team lab, isolated VM, cybersecurity, snapshot isolation">
+<meta name="author" content="Hasham Javed (Zudio)">
+<meta property="og:title" content="My Kali Linux Lab Setup — Isolated Pentest Environment | Zudio">
+<meta property="og:description" content="Building an isolated VirtualBox lab on Kali Linux to study RAT detection behavior against Windows Defender and Google Play Protect.">
+<meta property="og:url" content="https://zudio-infosec.github.io/posts/kali-lab-setup.html">
+<meta property="og:type" content="article">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --cyan: #00e5ff;
+    --red: #ff003c;
+    --dark: #050a05;
+    --darker: #020602;
+    --panel: rgba(0,255,65,0.04);
+    --border: rgba(0,255,65,0.2);
+    --text: #b0c4b0;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--dark); color: var(--text); font-family: var(--body); font-size: 16px; overflow-x: hidden; cursor: none; }
+
+  /* CURSOR */
+  #cursor { position: fixed; width: 12px; height: 12px; background: var(--green); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); box-shadow: 0 0 10px var(--green); }
+  #cursor-trail { position: fixed; width: 28px; height: 28px; border: 1px solid rgba(0,255,65,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.15s ease; }
+
+  /* SCAN LINES */
+  body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px); pointer-events: none; z-index: 1; }
+
+  /* MATRIX BG */
+  #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.05; }
+
+  /* SCROLL PROGRESS */
+  .scroll-line { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--cyan)); z-index: 200; transition: width 0.1s; box-shadow: 0 0 10px var(--green); }
+
+  /* PAGE TRANSITION */
+  #page-transition { position: fixed; inset: 0; background: var(--darker); z-index: 7999; pointer-events: none; display: none; opacity: 0; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; border-bottom: 1px solid var(--border); background: rgba(5,10,5,0.92); backdrop-filter: blur(12px); }
+  .nav-logo { font-family: var(--display); font-weight: 900; font-size: 1.2rem; color: var(--green); text-decoration: none; letter-spacing: 3px; text-shadow: 0 0 20px var(--green); }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 30px; list-style: none; position: absolute; left: 50%; transform: translateX(-50%); }
+  .nav-links a { color: var(--text); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+  .nav-links a::before { content: '> '; color: var(--green); opacity: 0; transition: opacity 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--green); }
+  .nav-links a:hover::before, .nav-links a.active::before { opacity: 1; }
+  .nav-status { font-family: var(--mono); font-size: 0.7rem; color: var(--green); display: flex; align-items: center; gap: 8px; }
+  .status-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 6px var(--green);}50%{opacity:0.4;box-shadow:none;} }
+
+  /* MAIN */
+  main { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 120px 40px 100px; }
+
+  /* POST HEADER */
+  .post-header { margin-bottom: 60px; opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; }
+  .breadcrumb { font-family: var(--mono); font-size: 0.65rem; color: rgba(0,255,65,0.4); letter-spacing: 2px; margin-bottom: 20px; }
+  .breadcrumb a { color: rgba(0,255,65,0.4); text-decoration: none; transition: color 0.2s; }
+  .breadcrumb a:hover { color: var(--green); }
+  .breadcrumb span { color: rgba(0,255,65,0.2); margin: 0 8px; }
+  .post-meta-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .post-cat-badge { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; color: var(--green); border: 1px solid rgba(0,255,65,0.4); padding: 4px 10px; text-transform: uppercase; }
+  .post-difficulty { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; color: var(--cyan); border: 1px solid rgba(0,229,255,0.3); padding: 4px 10px; }
+  .post-date-read { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.35); margin-left: auto; }
+  .post-title { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; color: #fff; letter-spacing: 2px; line-height: 1.1; margin-bottom: 16px; }
+  .post-subtitle { font-family: var(--mono); font-size: 0.8rem; color: var(--text); line-height: 1.7; max-width: 600px; margin-bottom: 24px; }
+  .post-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .post-tag { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.45); letter-spacing: 1px; }
+  .post-divider { width: 100%; height: 1px; background: linear-gradient(90deg, var(--green), transparent); }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  /* INFO BOX */
+  .info-box {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 20px 24px;
+    margin: 32px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .info-item { text-align: center; }
+  .info-label { font-family: var(--mono); font-size: 0.55rem; color: rgba(0,255,65,0.4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .info-value { font-family: var(--mono); font-size: 0.75rem; color: var(--green); }
+
+  /* ARTICLE BODY */
+  .post-body { opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards; }
+
+  /* STEP SECTIONS */
+  .step {
+    margin: 48px 0;
+    border-left: 2px solid rgba(0,255,65,0.2);
+    padding-left: 28px;
+    position: relative;
+  }
+  .step::before {
+    content: attr(data-step);
+    position: absolute;
+    left: -14px; top: 0;
+    width: 26px; height: 26px;
+    background: var(--dark);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: 1px;
+  }
+  .step-title {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .step-title .step-num { color: var(--green); margin-right: 10px; font-size: 0.75rem; }
+
+  /* PROSE */
+  .prose { font-size: 1rem; line-height: 1.85; color: var(--text); margin-bottom: 18px; }
+  .prose strong { color: #e0e0e0; font-weight: 600; }
+  .prose .hl { color: var(--green); font-family: var(--mono); font-size: 0.9em; }
+  .prose .hl-cyan { color: var(--cyan); font-family: var(--mono); font-size: 0.9em; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: #010801;
+    border: 1px solid rgba(0,255,65,0.15);
+    border-left: 3px solid var(--green);
+    padding: 18px 20px;
+    margin: 18px 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--green);
+    overflow-x: auto;
+    line-height: 1.7;
+    position: relative;
+  }
+  .code-block .cb-label {
+    position: absolute; top: 8px; right: 12px;
+    font-size: 0.55rem; color: rgba(0,255,65,0.3); letter-spacing: 2px;
+  }
+  .code-block .cmd { color: var(--cyan); }
+  .code-block .out { color: #7a9a7a; }
+  .code-block .hl { color: #fff; background: rgba(0,255,65,0.1); padding: 0 3px; }
+  .code-block .comment { color: rgba(0,255,65,0.3); }
+
+  /* ANSWER BOX */
+  .answer-box {
+    border: 1px solid rgba(0,255,65,0.4);
+    background: rgba(0,255,65,0.04);
+    padding: 16px 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .answer-icon { color: var(--green); font-size: 1rem; }
+  .answer-label { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.5); letter-spacing: 2px; text-transform: uppercase; }
+  .answer-value { font-family: var(--mono); font-size: 0.82rem; color: var(--green); margin-top: 3px; }
+
+  /* WARNING / NOTE BOX */
+  .note-box {
+    border: 1px solid rgba(0,229,255,0.2);
+    background: rgba(0,229,255,0.03);
+    border-left: 3px solid var(--cyan);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    line-height: 1.65;
+  }
+  .note-box strong { color: #fff; }
+
+  /* SECTION DIVIDER */
+  .s-div { display: flex; align-items: center; gap: 14px; margin: 48px 0 32px; }
+  .s-div span { font-family: var(--mono); font-size: 0.6rem; color: var(--green); letter-spacing: 3px; white-space: nowrap; }
+  .s-div-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* SUMMARY TABLE */
+  .summary-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--mono); font-size: 0.72rem; }
+  .summary-table th { color: var(--green); letter-spacing: 2px; text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+  .summary-table td { color: var(--text); padding: 10px 14px; border-bottom: 1px solid rgba(0,255,65,0.06); }
+  .summary-table td:first-child { color: rgba(0,255,65,0.5); }
+  .summary-table tr:hover td { background: rgba(0,255,65,0.03); }
+
+  /* NAV BETWEEN POSTS */
+  .post-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border); gap: 20px; flex-wrap: wrap; }
+  .post-nav a { font-family: var(--mono); font-size: 0.7rem; color: var(--text); text-decoration: none; letter-spacing: 1px; transition: color 0.3s; }
+  .post-nav a:hover { color: var(--green); }
+  .post-nav .back { color: var(--cyan); }
+
+  /* FOOTER */
+  footer { position: relative; z-index: 2; border-top: 1px solid var(--border); padding: 60px 40px; text-align: center; background: var(--darker); }
+  .footer-logo { font-family: var(--display); font-size: 2rem; font-weight: 900; color: var(--green); text-shadow: 0 0 30px var(--green); margin-bottom: 20px; letter-spacing: 6px; }
+  .footer-desc { font-family: var(--mono); font-size: 0.75rem; color: rgba(0,255,65,0.5); margin-bottom: 30px; letter-spacing: 2px; }
+  .footer-social { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+  .social-pill { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 1.5px; padding: 6px 13px; border: 1px solid var(--border); color: var(--text); text-decoration: none; transition: all 0.25s; text-transform: uppercase; }
+  .social-pill:hover { border-color: var(--green); color: var(--green); background: rgba(0,255,65,0.05); }
+  .footer-copy { font-family: var(--mono); font-size: 0.65rem; color: rgba(0,255,65,0.25); letter-spacing: 2px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    main { padding: 100px 24px 60px; }
+    .info-box { grid-template-columns: 1fr 1fr; }
+    .post-title { font-size: 1.8rem; }
+    .code-block { font-size: 0.68rem; padding: 14px; }
+    .summary-table { font-size: 0.62rem; }
+    .summary-table th, .summary-table td { padding: 8px; }
+    .social-pill { padding: 8px 12px; min-height: 36px; }
+    .post-nav { flex-direction: column; gap: 16px; }
+  }
+
+  /* HAMBURGER */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; padding: 6px; z-index: 102; background: none; border: none; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--green); transition: all 0.3s ease; transform-origin: center; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-drawer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2,6,2,0.97); z-index: 101; flex-direction: column; align-items: center; justify-content: center; gap: 36px; backdrop-filter: blur(16px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .nav-drawer.open { opacity: 1; pointer-events: all; }
+  .nav-drawer a { font-family: var(--display); font-size: 1.2rem; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 4px; text-transform: uppercase; transition: color 0.3s; padding: 8px 0; }
+  .nav-drawer a:hover, .nav-drawer a.active { color: var(--green); }
+  .nav-drawer .drawer-close { position: absolute; top: 20px; right: 20px; font-family: var(--mono); font-size: 1.2rem; color: var(--green); background: none; border: none; cursor: none; padding: 8px; }
+
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .nav-drawer { display: flex; }
+    body { cursor: auto; }
+    #cursor, #cursor-trail { display: none; }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor, #cursor-trail { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-line" id="scroll-line"></div>
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+<div id="page-transition"></div>
+<canvas id="matrix-bg"></canvas>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="nav-drawer" id="nav-drawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  <a href="../index.html" data-internal onclick="closeDrawer()">Home</a>
+  <a href="../index.html#about-wrap" data-internal onclick="closeDrawer()">About</a>
+  <a href="../index.html#skills-wrap" data-internal onclick="closeDrawer()">Skills</a>
+  <a href="../index.html#projects-wrap" data-internal onclick="closeDrawer()">Projects</a>
+  <a href="../index.html#writeups-wrap" data-internal onclick="closeDrawer()">Writeups</a>
+  <a href="../blog.html" class="active" data-internal onclick="closeDrawer()">Blog</a>
+  <a href="https://github.com/zudio-infosec" target="_blank">GitHub</a>
+</div>
+
+<nav>
+  <a href="../index.html" class="nav-logo" data-internal>ZUD<span>IO</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html" data-internal>Home</a></li>
+    <li><a href="../index.html#about-wrap" data-internal>About</a></li>
+    <li><a href="../index.html#skills-wrap" data-internal>Skills</a></li>
+    <li><a href="../index.html#projects-wrap" data-internal>Projects</a></li>
+    <li><a href="../index.html#writeups-wrap" data-internal>Writeups</a></li>
+    <li><a href="../blog.html" class="active" data-internal>Blog</a></li>
+    <li><a href="https://github.com/zudio-infosec" target="_blank">GitHub</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    OPEN TO INTERNSHIPS
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<main>
+
+  <!-- POST HEADER -->
+  <div class="post-header">
+    <div class="breadcrumb">
+      <a href="../index.html" data-internal>Home</a>
+      <span>/</span>
+      <a href="../blog.html" data-internal>Blog</a>
+      <span>/</span>
+      Kali Lab Setup
+    </div>
+
+    <div class="post-meta-row">
+      <span class="post-cat-badge">SETUP</span>
+      <span class="post-difficulty" style="color:var(--cyan)">Ongoing</span>
+      <span class="post-date-read">MAY 2026 &nbsp;·&nbsp; 8 min read</span>
+    </div>
+
+    <h1 class="post-title">My Kali Linux Lab<br>Setup</h1>
+    <p class="post-subtitle">An isolated VirtualBox environment on Kali Linux — Windows 7/10/11, a Kali guest, and Metasploitable-2 — built to study how Windows Defender and Google Play Protect actually respond to commercial RATs, without ever touching a device that isn't mine.</p>
+
+    <div class="post-tags">
+      <span class="post-tag">#kalilinux</span>
+      <span class="post-tag">#virtualbox</span>
+      <span class="post-tag">#pentestlab</span>
+      <span class="post-tag">#windowsdefender</span>
+      <span class="post-tag">#malwareanalysis</span>
+      <span class="post-tag">#redteam</span>
+    </div>
+
+    <div class="info-box">
+      <div class="info-item">
+        <div class="info-label">Host</div>
+        <div class="info-value">Kali Linux (Rolling)</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Guest VMs</div>
+        <div class="info-value" style="color:var(--cyan)">Win 7/10/11, Kali, Metasploitable-2</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Network</div>
+        <div class="info-value">NAT — 10.0.0.x</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Isolation</div>
+        <div class="info-value">Snapshots</div>
+      </div>
+    </div>
+
+    <div class="post-divider"></div>
+  </div>
+
+  <!-- POST BODY -->
+  <div class="post-body">
+
+    <!-- OVERVIEW -->
+    <div class="s-div"><span>// OVERVIEW</span><div class="s-div-line"></div></div>
+
+    <p class="prose">
+      I run <strong>Kali Linux</strong> as my host OS directly — I tried Arch with Hyprland for a while, but for day-to-day offensive security work Kali's tooling and driver support just fit better, and it keeps the host and guest distros consistent. On top of that host I run a <strong>VirtualBox lab</strong> that I use for two different kinds of work: general pentest practice, and — the part I'm most focused on right now — studying how Windows Defender and Google Play Protect actually detect and respond to commercial RATs.
+    </p>
+
+    <div class="note-box">
+      <strong>// Scope note:</strong> Every test in this lab runs against my own VMs and my own devices only. No sample is ever run against, or distributed to, a system I don't own. The goal is building detection and defense knowledge, not building tools to use on anyone else.
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="s-div"><span>// STEP 1 — HOST + VIRTUALBOX</span><div class="s-div-line"></div></div>
+
+    <div class="step" data-step="01">
+      <div class="step-title"><span class="step-num">01</span>Kali as the host, VirtualBox on top</div>
+      <p class="prose">The host is Kali Linux (rolling release) on an MSI Modern 14 (i5-1235U, 8GB RAM). VirtualBox runs directly on the host and hosts every guest VM below. Keeping Kali as the host — rather than running it as a guest inside something else — means the tooling I use to observe and interact with the guests (Wireshark, process monitors, network capture) is right there on the same machine.</p>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="s-div"><span>// STEP 2 — GUEST VMs</span><div class="s-div-line"></div></div>
+
+    <div class="step" data-step="02">
+      <div class="step-title"><span class="step-num">02</span>What's actually running</div>
+      <p class="prose">Four guest VMs, each with a specific job:</p>
+
+      <table class="summary-table">
+        <thead>
+          <tr><th>VM</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Windows 7 / 10 / 11</td><td>Defender-focused RAT testing — different Defender/SmartScreen behavior per version</td></tr>
+          <tr><td>Metasploitable-2</td><td>Deliberately vulnerable Linux target for exploitation practice</td></tr>
+          <tr><td>Kali (guest)</td><td>Used for heavier engagements where I want the attacker box further isolated from the host itself</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <span class="cb-label">BASH</span>
+        <span class="cmd">VBoxManage list vms</span>
+        <span class="comment"># lists every registered guest — quick sanity check before a session</span>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="s-div"><span>// STEP 3 — NETWORK ISOLATION</span><div class="s-div-line"></div></div>
+
+    <div class="step" data-step="03">
+      <div class="step-title"><span class="step-num">03</span>NAT-only, snapshot-first</div>
+      <p class="prose">Every guest is on a <span class="hl">NAT</span> network — VirtualBox puts them on a private <span class="hl">10.0.0.x</span> subnet. They get outbound internet, but nothing on my real LAN (router, phone, other machines) can reach in, and the guests can't reach out to the LAN either without explicit port forwarding. No bridged adapters anywhere in this lab.</p>
+
+      <p class="prose">Before running anything live, I take a <strong>snapshot</strong>. After the test, I revert. Every sample runs against the exact same clean state — no leftover artifacts from a previous test skewing what I'm observing.</p>
+
+      <div class="note-box">
+        <strong>// Why this matters:</strong> isolation isn't just "best practice" boilerplate — it's what makes it safe to run a live RAT sample at all. Without NAT isolation + snapshots, I wouldn't run this stuff.
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="s-div"><span>// STEP 4 — RAT / AV DETECTION RESEARCH</span><div class="s-div-line"></div></div>
+
+    <div class="step" data-step="04">
+      <div class="step-title"><span class="step-num">04</span>What I'm actually testing</div>
+      <p class="prose">Inside the isolated Windows VMs, I've been running commercial/publicly-documented RATs and observing — not modifying or building — how Windows Defender's real-time protection reacts: does it flag on-disk, on-execution, or not at all; does SmartScreen intervene; what gets logged. For the Android side, I sideload APKs into an isolated environment to see how Google Play Protect classifies the same category of tool.</p>
+
+      <table class="summary-table">
+        <thead>
+          <tr><th>Tool</th><th>Platform</th><th>Focus</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>NjRAT</td><td>Windows only (.NET 4.0 fallback)</td><td>Defender real-time protection</td></tr>
+          <tr><td>CraxRat</td><td>Windows</td><td>Defender real-time protection</td></tr>
+          <tr><td>AhMyth RAT</td><td>Cross-platform, Android-focused</td><td>Google Play Protect</td></tr>
+          <tr><td>888RAT</td><td>Windows / Linux / Android</td><td>Cross-platform detection comparison</td></tr>
+        </tbody>
+      </table>
+
+      <p class="prose">I'm keeping this section observational on purpose — the point of documenting it publicly is to show the detection-research methodology, not to publish an evasion guide.</p>
+    </div>
+
+    <!-- LESSONS -->
+    <div class="s-div"><span>// WHAT I'VE LEARNED SO FAR</span><div class="s-div-line"></div></div>
+
+    <p class="prose">Detection isn't uniform — the same category of tool gets treated very differently depending on Windows version, whether Defender's cloud-delivered protection is reachable, and how the sample is delivered (disk vs. memory). That gap between <strong>signature-based</strong> and <strong>heuristic/behavioral</strong> detection is where most of the interesting differences show up.</p>
+
+    <p class="prose">The isolation discipline — NAT-only networking, snapshot-before/revert-after — is what actually makes this kind of research responsible to do at all. It's also, honestly, the part that translates most directly to real red team lab hygiene.</p>
+
+    <!-- POST NAVIGATION -->
+    <div class="post-nav">
+      <a href="../blog.html" class="back" data-internal>← Back to Blog</a>
+      <a href="https://github.com/zudio-infosec" target="_blank">More on GitHub →</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">ZUDIO</div>
+  <div class="footer-desc">// CYBERSECURITY STUDENT • GUJRANWALA, PK → UK</div>
+  <div class="footer-social">
+    <a href="https://github.com/zudio-infosec" target="_blank" class="social-pill">⌥ GitHub</a>
+    <a href="https://www.linkedin.com/in/hasham-javed-a03424400/" target="_blank" class="social-pill">in LinkedIn</a>
+    <a href="https://tryhackme.com/p/zudio.infosec" target="_blank" class="social-pill">⚑ TryHackMe</a>
+    <a href="https://www.instagram.com/zudio.infosec" target="_blank" class="social-pill">◎ Instagram</a>
+    <a href="https://www.youtube.com/@zudio-infosec" target="_blank" class="social-pill">▶ YouTube</a>
+    <a href="mailto:zudio001@proton.me" title="zudio001@proton.me" class="social-pill">✉ Email</a>
+  </div>
+  <div class="footer-copy">© 2026 ZUDIO (HASHAM JAVED) • BUILT WITH CURIOSITY • OPEN TO REMOTE INTERNSHIPS</div>
+</footer>
+
+<script>
+  // ── HAMBURGER MENU ──
+  function toggleDrawer() {
+    const drawer = document.getElementById('nav-drawer');
+    const burger = document.getElementById('hamburger');
+    const isOpen = drawer.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeDrawer() {
+    document.getElementById('nav-drawer').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeDrawer(); });
+
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  let mx=-100,my=-100,tx=-100,ty=-100;
+  cursor.style.left='-100px'; cursor.style.top='-100px';
+  trail.style.left='-100px'; trail.style.top='-100px';
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+  setInterval(()=>{ tx+=(mx-tx)*0.15; ty+=(my-ty)*0.15; trail.style.left=tx+'px'; trail.style.top=ty+'px'; },16);
+
+  // ── SCROLL PROGRESS ──
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY/(document.body.scrollHeight-window.innerHeight);
+    document.getElementById('scroll-line').style.width=(s*100)+'%';
+  });
+
+  // ── MATRIX RAIN ──
+  const canvas = document.getElementById('matrix-bg');
+  const ctx = canvas.getContext('2d');
+  const fontSize = 13;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&<>{}[]';
+  let drops;
+  function initMatrix() {
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
+  }
+  initMatrix();
+  window.addEventListener('resize', initMatrix);
+  function drawMatrix() {
+    ctx.fillStyle='rgba(5,10,5,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#00ff41'; ctx.font=fontSize+'px Share Tech Mono, monospace';
+    for(let i=0;i<drops.length;i++){
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize>canvas.height&&Math.random()>0.975) drops[i]=0;
+      drops[i]++;
+    }
+  }
+  setInterval(drawMatrix, 55);
+
+  // ── PAGE TRANSITION ──
+  const pt = document.getElementById('page-transition');
+  const isInternal = document.referrer && document.referrer.includes(window.location.hostname);
+  if (isInternal && pt) {
+    pt.style.display='block'; pt.style.opacity='1'; pt.style.transition='none';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      pt.style.transition='opacity 0.5s ease'; pt.style.opacity='0';
+      setTimeout(()=>pt.style.display='none',500);
+    }));
+  }
+  document.querySelectorAll('a[data-internal]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('http')) return;
+      e.preventDefault();
+      if (pt) {
+        pt.style.display='block'; pt.style.opacity='0'; pt.style.transition='none';
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+          pt.style.transition='opacity 0.35s ease'; pt.style.opacity='1';
+          setTimeout(()=>window.location.href=href, 380);
+        }));
+      } else { window.location.href=href; }
+    });
+  });
+</script>
+</body>
+</html>
+
