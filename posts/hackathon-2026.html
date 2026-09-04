@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cybersecurity Hackathon 2026 — 3 Days, 11 Flags | Zudio</title>
+<meta name="description" content="My experience at the Cybersecurity Hackathon 2026 — three days of free, beginner-friendly training in web, mobile, and red team fundamentals, capped off with a workshop CTF across web, network, crypto, Android reversing, and DFIR.">
+<meta name="keywords" content="cybersecurity hackathon, red team training, CTF workshop, Ignite, OWASP, TryHackMe, beginner cybersecurity, Pakistan cybersecurity">
+<meta name="author" content="Hasham Javed (Zudio)">
+<meta property="og:title" content="Cybersecurity Hackathon 2026 — 3 Days, 11 Flags | Zudio">
+<meta property="og:description" content="Three days of training and a workshop CTF at Cybersecurity Hackathon 2026 — what it was actually like.">
+<meta property="og:url" content="https://zudio-infosec.github.io/posts/hackathon-2026.html">
+<meta property="og:type" content="article">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --cyan: #00e5ff;
+    --red: #ff003c;
+    --dark: #050a05;
+    --darker: #020602;
+    --panel: rgba(0,255,65,0.04);
+    --border: rgba(0,255,65,0.2);
+    --text: #b0c4b0;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--dark); color: var(--text); font-family: var(--body); font-size: 16px; overflow-x: hidden; cursor: none; }
+
+  /* CURSOR */
+  #cursor { position: fixed; width: 12px; height: 12px; background: var(--green); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); box-shadow: 0 0 10px var(--green); }
+  #cursor-trail { position: fixed; width: 28px; height: 28px; border: 1px solid rgba(0,255,65,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.15s ease; }
+
+  /* SCAN LINES */
+  body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px); pointer-events: none; z-index: 1; }
+
+  /* MATRIX BG */
+  #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.05; }
+
+  /* SCROLL PROGRESS */
+  .scroll-line { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--cyan)); z-index: 200; transition: width 0.1s; box-shadow: 0 0 10px var(--green); }
+
+  /* PAGE TRANSITION */
+  #page-transition { position: fixed; inset: 0; background: var(--darker); z-index: 7999; pointer-events: none; display: none; opacity: 0; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; border-bottom: 1px solid var(--border); background: rgba(5,10,5,0.92); backdrop-filter: blur(12px); }
+  .nav-logo { font-family: var(--display); font-weight: 900; font-size: 1.2rem; color: var(--green); text-decoration: none; letter-spacing: 3px; text-shadow: 0 0 20px var(--green); }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links { display: flex; gap: 30px; list-style: none; position: absolute; left: 50%; transform: translateX(-50%); }
+  .nav-links a { color: var(--text); text-decoration: none; font-family: var(--mono); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+  .nav-links a::before { content: '> '; color: var(--green); opacity: 0; transition: opacity 0.3s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--green); }
+  .nav-links a:hover::before, .nav-links a.active::before { opacity: 1; }
+  .nav-status { font-family: var(--mono); font-size: 0.7rem; color: var(--green); display: flex; align-items: center; gap: 8px; }
+  .status-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 6px var(--green);}50%{opacity:0.4;box-shadow:none;} }
+
+  /* MAIN */
+  main { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 120px 40px 100px; }
+
+  /* POST HEADER */
+  .post-header { margin-bottom: 60px; opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; }
+  .breadcrumb { font-family: var(--mono); font-size: 0.65rem; color: rgba(0,255,65,0.4); letter-spacing: 2px; margin-bottom: 20px; }
+  .breadcrumb a { color: rgba(0,255,65,0.4); text-decoration: none; transition: color 0.2s; }
+  .breadcrumb a:hover { color: var(--green); }
+  .breadcrumb span { color: rgba(0,255,65,0.2); margin: 0 8px; }
+  .post-meta-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .post-cat-badge { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; color: var(--green); border: 1px solid rgba(0,255,65,0.4); padding: 4px 10px; text-transform: uppercase; }
+  .post-difficulty { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 2px; color: var(--cyan); border: 1px solid rgba(0,229,255,0.3); padding: 4px 10px; }
+  .post-date-read { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.35); margin-left: auto; }
+  .post-title { font-family: var(--display); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; color: #fff; letter-spacing: 2px; line-height: 1.1; margin-bottom: 16px; }
+  .post-subtitle { font-family: var(--mono); font-size: 0.8rem; color: var(--text); line-height: 1.7; max-width: 600px; margin-bottom: 24px; }
+  .post-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .post-tag { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.45); letter-spacing: 1px; }
+  .post-divider { width: 100%; height: 1px; background: linear-gradient(90deg, var(--green), transparent); }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+  /* INFO BOX */
+  .info-box {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    padding: 20px 24px;
+    margin: 32px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .info-item { text-align: center; }
+  .info-label { font-family: var(--mono); font-size: 0.55rem; color: rgba(0,255,65,0.4); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .info-value { font-family: var(--mono); font-size: 0.75rem; color: var(--green); }
+
+  /* ARTICLE BODY */
+  .post-body { opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards; }
+
+  /* STEP SECTIONS */
+  .step {
+    margin: 48px 0;
+    border-left: 2px solid rgba(0,255,65,0.2);
+    padding-left: 28px;
+    position: relative;
+  }
+  .step::before {
+    content: attr(data-step);
+    position: absolute;
+    left: -14px; top: 0;
+    width: 26px; height: 26px;
+    background: var(--dark);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: 1px;
+  }
+  .step-title {
+    font-family: var(--display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .step-title .step-num { color: var(--green); margin-right: 10px; font-size: 0.75rem; }
+
+  /* PROSE */
+  .prose { font-size: 1rem; line-height: 1.85; color: var(--text); margin-bottom: 18px; }
+  .prose strong { color: #e0e0e0; font-weight: 600; }
+  .prose .hl { color: var(--green); font-family: var(--mono); font-size: 0.9em; }
+  .prose .hl-cyan { color: var(--cyan); font-family: var(--mono); font-size: 0.9em; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: #010801;
+    border: 1px solid rgba(0,255,65,0.15);
+    border-left: 3px solid var(--green);
+    padding: 18px 20px;
+    margin: 18px 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--green);
+    overflow-x: auto;
+    line-height: 1.7;
+    position: relative;
+  }
+  .code-block .cb-label {
+    position: absolute; top: 8px; right: 12px;
+    font-size: 0.55rem; color: rgba(0,255,65,0.3); letter-spacing: 2px;
+  }
+  .code-block .cmd { color: var(--cyan); }
+  .code-block .out { color: #7a9a7a; }
+  .code-block .hl { color: #fff; background: rgba(0,255,65,0.1); padding: 0 3px; }
+  .code-block .comment { color: rgba(0,255,65,0.3); }
+
+  /* ANSWER BOX */
+  .answer-box {
+    border: 1px solid rgba(0,255,65,0.4);
+    background: rgba(0,255,65,0.04);
+    padding: 16px 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .answer-icon { color: var(--green); font-size: 1rem; }
+  .answer-label { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.5); letter-spacing: 2px; text-transform: uppercase; }
+  .answer-value { font-family: var(--mono); font-size: 0.82rem; color: var(--green); margin-top: 3px; }
+
+  /* WARNING / NOTE BOX */
+  .note-box {
+    border: 1px solid rgba(0,229,255,0.2);
+    background: rgba(0,229,255,0.03);
+    border-left: 3px solid var(--cyan);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    line-height: 1.65;
+  }
+  .note-box strong { color: #fff; }
+
+  /* SECTION DIVIDER */
+  .s-div { display: flex; align-items: center; gap: 14px; margin: 48px 0 32px; }
+  .s-div span { font-family: var(--mono); font-size: 0.6rem; color: var(--green); letter-spacing: 3px; white-space: nowrap; }
+  .s-div-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+  /* SUMMARY TABLE */
+  .summary-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--mono); font-size: 0.72rem; }
+  .summary-table th { color: var(--green); letter-spacing: 2px; text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+  .summary-table td { color: var(--text); padding: 10px 14px; border-bottom: 1px solid rgba(0,255,65,0.06); }
+  .summary-table td:first-child { color: rgba(0,255,65,0.5); }
+  .summary-table tr:hover td { background: rgba(0,255,65,0.03); }
+
+  /* NAV BETWEEN POSTS */
+  .post-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border); gap: 20px; flex-wrap: wrap; }
+  .post-nav a { font-family: var(--mono); font-size: 0.7rem; color: var(--text); text-decoration: none; letter-spacing: 1px; transition: color 0.3s; }
+  .post-nav a:hover { color: var(--green); }
+  .post-nav .back { color: var(--cyan); }
+
+  /* FOOTER */
+  footer { position: relative; z-index: 2; border-top: 1px solid var(--border); padding: 60px 40px; text-align: center; background: var(--darker); }
+  .footer-logo { font-family: var(--display); font-size: 2rem; font-weight: 900; color: var(--green); text-shadow: 0 0 30px var(--green); margin-bottom: 20px; letter-spacing: 6px; }
+  .footer-desc { font-family: var(--mono); font-size: 0.75rem; color: rgba(0,255,65,0.5); margin-bottom: 30px; letter-spacing: 2px; }
+  .footer-social { display: flex; justify-content: center; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+  .social-pill { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 1.5px; padding: 6px 13px; border: 1px solid var(--border); color: var(--text); text-decoration: none; transition: all 0.25s; text-transform: uppercase; }
+  .social-pill:hover { border-color: var(--green); color: var(--green); background: rgba(0,255,65,0.05); }
+  .footer-copy { font-family: var(--mono); font-size: 0.65rem; color: rgba(0,255,65,0.25); letter-spacing: 2px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    main { padding: 100px 24px 60px; }
+    .info-box { grid-template-columns: 1fr 1fr; }
+    .post-title { font-size: 1.8rem; }
+    .code-block { font-size: 0.68rem; padding: 14px; }
+    .summary-table { font-size: 0.62rem; }
+    .summary-table th, .summary-table td { padding: 8px; }
+    .social-pill { padding: 8px 12px; min-height: 36px; }
+    .post-nav { flex-direction: column; gap: 16px; }
+  }
+
+  /* HAMBURGER */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; padding: 6px; z-index: 102; background: none; border: none; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--green); transition: all 0.3s ease; transform-origin: center; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-drawer { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2,6,2,0.97); z-index: 101; flex-direction: column; align-items: center; justify-content: center; gap: 36px; backdrop-filter: blur(16px); opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .nav-drawer.open { opacity: 1; pointer-events: all; }
+  .nav-drawer a { font-family: var(--display); font-size: 1.2rem; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: 4px; text-transform: uppercase; transition: color 0.3s; padding: 8px 0; }
+  .nav-drawer a:hover, .nav-drawer a.active { color: var(--green); }
+  .nav-drawer .drawer-close { position: absolute; top: 20px; right: 20px; font-family: var(--mono); font-size: 1.2rem; color: var(--green); background: none; border: none; cursor: none; padding: 8px; }
+
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .nav-drawer { display: flex; }
+    body { cursor: auto; }
+    #cursor, #cursor-trail { display: none; }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor, #cursor-trail { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-line" id="scroll-line"></div>
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+<div id="page-transition"></div>
+<canvas id="matrix-bg"></canvas>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="nav-drawer" id="nav-drawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  <a href="../index.html" data-internal onclick="closeDrawer()">Home</a>
+  <a href="../index.html#about-wrap" data-internal onclick="closeDrawer()">About</a>
+  <a href="../index.html#skills-wrap" data-internal onclick="closeDrawer()">Skills</a>
+  <a href="../index.html#projects-wrap" data-internal onclick="closeDrawer()">Projects</a>
+  <a href="../index.html#writeups-wrap" data-internal onclick="closeDrawer()">Writeups</a>
+  <a href="../blog.html" class="active" data-internal onclick="closeDrawer()">Blog</a>
+  <a href="https://github.com/zudio-infosec" target="_blank">GitHub</a>
+</div>
+
+<nav>
+  <a href="../index.html" class="nav-logo" data-internal>ZUD<span>IO</span></a>
+  <ul class="nav-links">
+    <li><a href="../index.html" data-internal>Home</a></li>
+    <li><a href="../index.html#about-wrap" data-internal>About</a></li>
+    <li><a href="../index.html#skills-wrap" data-internal>Skills</a></li>
+    <li><a href="../index.html#projects-wrap" data-internal>Projects</a></li>
+    <li><a href="../index.html#writeups-wrap" data-internal>Writeups</a></li>
+    <li><a href="../blog.html" class="active" data-internal>Blog</a></li>
+    <li><a href="https://github.com/zudio-infosec" target="_blank">GitHub</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    OPEN TO INTERNSHIPS
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<main>
+
+  <!-- POST HEADER -->
+  <div class="post-header">
+    <div class="breadcrumb">
+      <a href="../index.html" data-internal>Home</a>
+      <span>/</span>
+      <a href="../blog.html" data-internal>Blog</a>
+      <span>/</span>
+      Cybersecurity Hackathon 2026
+    </div>
+
+    <div class="post-meta-row">
+      <span class="post-cat-badge">HACKATHON</span>
+      <span class="post-difficulty" style="color:var(--cyan)">3 Days</span>
+      <span class="post-date-read">SEP 2026 &nbsp;·&nbsp; 10 min read</span>
+    </div>
+
+    <h1 class="post-title">Cybersecurity Hackathon 2026<br>3 Days, 11 Flags</h1>
+    <p class="post-subtitle">A free, beginner-friendly workshop on web, mobile, and red team fundamentals — capped off with a CTF I didn't want to stop solving. This is the experience, not the writeups. Full technical breakdowns are linked at the bottom.</p>
+
+    <div class="post-tags">
+      <span class="post-tag">#hackathon</span>
+      <span class="post-tag">#ctf</span>
+      <span class="post-tag">#redteam</span>
+      <span class="post-tag">#ignite</span>
+      <span class="post-tag">#owasp</span>
+    </div>
+
+    <div class="info-box">
+      <div class="info-item">
+        <div class="info-label">Duration</div>
+        <div class="info-value">3 days, 9AM–5PM</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Format</div>
+        <div class="info-value" style="color:var(--cyan)">Training + Workshop CTF</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Focus</div>
+        <div class="info-value">Web, Mobile, Red Team</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Challenges Solved</div>
+        <div class="info-value">11</div>
+      </div>
+    </div>
+
+    <div class="post-divider"></div>
+  </div>
+
+  <!-- POST BODY -->
+  <div class="post-body">
+
+    <!-- BEFORE -->
+    <div class="s-div"><span>// GOING IN</span><div class="s-div-line"></div></div>
+
+    <p class="prose">
+      Honestly, I didn't expect any of this to be free. A 3-day cybersecurity workshop, full training days, a live CTF at the end — I went in assuming it'd be a paid thing I'd have to justify to myself. It wasn't. And the content quality caught me off guard too — this wasn't a "beginner workshop" in the padded, watered-down sense. They genuinely tried to cover as much real ground as they could in three days: capturing and reading requests/responses, how testers actually approach mobile application security, current threat trends and perceptions in the industry. Beginner-friendly, but not beginner-shallow.
+    </p>
+
+    <p class="prose">
+      The trainers made the difference. The Blue Team trainer was solid — clearly knew the material. But the <strong>Red Teaming trainer</strong> was something else — chill, approachable, the kind of teacher who makes a technical room feel relaxed instead of intimidating. That mattered more than I expected.
+    </p>
+
+    <div class="note-box">
+      <strong>// Context:</strong> I've been self-teaching cybersecurity for about 3 years at this point. Red teaming, offensive concepts, tooling — I had a decent handle on those. Web hacking specifically was the gap. I understood pieces of it but never had anyone actually clarify it end-to-end. That gap is exactly what this workshop closed.
+    </div>
+
+    <!-- DAY ONE -->
+    <div class="s-div"><span>// DAY ONE — NERVES</span><div class="s-div-line"></div></div>
+
+    <div class="step" data-step="01">
+      <div class="step-title"><span class="step-num">01</span>Walking in nervous</div>
+      <p class="prose">First day, I was nervous — new environment, new people, and the organizer (a senior, Aurangzeb Rao) had actually asked me beforehand if I wanted to play in the Hackathon itself. I gave a hesitant "maybe... sure." Not exactly confident. First-day energy was cautious more than anything.</p>
+    </div>
+
+    <!-- DAY TWO/THREE -->
+    <div class="s-div"><span>// DAY TWO & THREE — LOCKED IN</span><div class="s-div-line"></div></div>
+
+    <div class="step" data-step="02">
+      <div class="step-title"><span class="step-num">02</span>Settling in</div>
+      <p class="prose">By day two, the nervousness was gone. The pace of the training and how genuinely interesting the content was meant I stopped thinking about the room and just focused on the material. Nine AM to five PM, every day, with a single 40–45 minute break — and I never once wanted to cut out early or waste a minute of it. That's rare for me to say about any training format.</p>
+    </div>
+
+    <div class="step" data-step="03">
+      <div class="step-title"><span class="step-num">03</span>What actually clicked</div>
+      <p class="prose">The Red Teaming trainer specifically walked through request/response capture and manipulation in a way that finally connected the dots for me on web hacking — not just "here's Burp Suite," but why each step in an attack chain works the way it does. Three years of self-study had given me the offensive mindset already; what I was missing was someone clarifying the web-specific fundamentals properly. He gave me exactly that, and encouraged me directly to keep pushing in the field.</p>
+    </div>
+
+    <!-- BEYOND TRAINING -->
+    <div class="s-div"><span>// BEYOND THE TRAINING</span><div class="s-div-line"></div></div>
+
+    <p class="prose">
+      It wasn't just technical content either. The organizers talked about where this can actually go — <strong>Ignite</strong> sponsoring student teams and startups coming out of these programs, with prize pools in the range of ~12 million (PKR), plus <strong>OWASP</strong> and <strong>TryHackMe</strong> vouchers handed out. The message throughout was consistent: they want more people actually entering this field, not just attending a workshop and forgetting about it.
+    </p>
+
+    <!-- THE CHALLENGES -->
+    <div class="s-div"><span>// THE WORKSHOP CTF</span><div class="s-div-line"></div></div>
+
+    <p class="prose">
+      The three days closed out with a hands-on CTF spanning web exploitation, network forensics, cryptography, Android reverse engineering, and DFIR. I ended up solving <strong>11 challenges</strong> — from session forgery and IDOR bugs on the web side, to reconstructing a flag out of a GRE covert channel, to tracing a full simulated APK-side-loading intrusion for a DFIR challenge.
+    </p>
+
+    <p class="prose">
+      I'm not re-explaining the technical details here on purpose — that's what the individual writeups are for. If you want the actual methodology for any of them, they're all documented properly:
+    </p>
+
+    <div class="note-box">
+      <strong>→ Full technical writeups:</strong> <a href="https://github.com/zudio-infosec/ctf-writeups/tree/main/hackathon-2026" target="_blank" style="color:var(--green)">github.com/zudio-infosec/ctf-writeups/hackathon-2026</a>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="s-div"><span>// CLOSING THOUGHT</span><div class="s-div-line"></div></div>
+
+    <p class="prose">
+      Going in nervous and coming out having solved 11 challenges and gotten a straight answer on where my web-hacking gaps actually were — that's a good three days by any measure. If a free workshop like this shows up again, sign up. Don't hesitate the way I almost did.
+    </p>
+
+    <!-- POST NAVIGATION -->
+    <div class="post-nav">
+      <a href="../blog.html" class="back" data-internal>← Back to Blog</a>
+      <a href="https://github.com/zudio-infosec/ctf-writeups/tree/main/hackathon-2026" target="_blank">View All Writeups →</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">ZUDIO</div>
+  <div class="footer-desc">// CYBERSECURITY STUDENT • GUJRANWALA, PK → UK</div>
+  <div class="footer-social">
+    <a href="https://github.com/zudio-infosec" target="_blank" class="social-pill">⌥ GitHub</a>
+    <a href="https://www.linkedin.com/in/hasham-javed-a03424400/" target="_blank" class="social-pill">in LinkedIn</a>
+    <a href="https://tryhackme.com/p/zudio.infosec" target="_blank" class="social-pill">⚑ TryHackMe</a>
+    <a href="https://www.instagram.com/zudio.infosec" target="_blank" class="social-pill">◎ Instagram</a>
+    <a href="https://www.youtube.com/@Zudio001" target="_blank" class="social-pill">▶ YouTube</a>
+    <a href="mailto:zudio001@proton.me" title="zudio001@proton.me" class="social-pill">✉ Email</a>
+  </div>
+  <div class="footer-copy">© 2026 ZUDIO (HASHAM JAVED) • BUILT WITH CURIOSITY • OPEN TO REMOTE INTERNSHIPS</div>
+</footer>
+
+<script>
+  // ── HAMBURGER MENU ──
+  function toggleDrawer() {
+    const drawer = document.getElementById('nav-drawer');
+    const burger = document.getElementById('hamburger');
+    const isOpen = drawer.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeDrawer() {
+    document.getElementById('nav-drawer').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeDrawer(); });
+
+  // ── CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  let mx=-100,my=-100,tx=-100,ty=-100;
+  cursor.style.left='-100px'; cursor.style.top='-100px';
+  trail.style.left='-100px'; trail.style.top='-100px';
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=mx+'px'; cursor.style.top=my+'px'; });
+  setInterval(()=>{ tx+=(mx-tx)*0.15; ty+=(my-ty)*0.15; trail.style.left=tx+'px'; trail.style.top=ty+'px'; },16);
+
+  // ── SCROLL PROGRESS ──
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY/(document.body.scrollHeight-window.innerHeight);
+    document.getElementById('scroll-line').style.width=(s*100)+'%';
+  });
+
+  // ── MATRIX RAIN ──
+  const canvas = document.getElementById('matrix-bg');
+  const ctx = canvas.getContext('2d');
+  const fontSize = 13;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&<>{}[]';
+  let drops;
+  function initMatrix() {
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
+  }
+  initMatrix();
+  window.addEventListener('resize', initMatrix);
+  function drawMatrix() {
+    ctx.fillStyle='rgba(5,10,5,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#00ff41'; ctx.font=fontSize+'px Share Tech Mono, monospace';
+    for(let i=0;i<drops.length;i++){
+      ctx.fillText(chars[Math.floor(Math.random()*chars.length)],i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize>canvas.height&&Math.random()>0.975) drops[i]=0;
+      drops[i]++;
+    }
+  }
+  setInterval(drawMatrix, 55);
+
+  // ── PAGE TRANSITION ──
+  const pt = document.getElementById('page-transition');
+  const isInternal = document.referrer && document.referrer.includes(window.location.hostname);
+  if (isInternal && pt) {
+    pt.style.display='block'; pt.style.opacity='1'; pt.style.transition='none';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      pt.style.transition='opacity 0.5s ease'; pt.style.opacity='0';
+      setTimeout(()=>pt.style.display='none',500);
+    }));
+  }
+  document.querySelectorAll('a[data-internal]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('http')) return;
+      e.preventDefault();
+      if (pt) {
+        pt.style.display='block'; pt.style.opacity='0'; pt.style.transition='none';
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+          pt.style.transition='opacity 0.35s ease'; pt.style.opacity='1';
+          setTimeout(()=>window.location.href=href, 380);
+        }));
+      } else { window.location.href=href; }
+    });
+  });
+</script>
+</body>
+</html>
+
