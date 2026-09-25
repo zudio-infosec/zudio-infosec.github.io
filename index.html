@@ -1,8 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  
+<meta name="google-site-verification" content="8W8WutowQeKPjR2WYxHme-EnFRHcaajzUcVOGWJ2iBY" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zudio | Cybersecurity Student & CTF Player</title>
+<meta name="description" content="Zudio (Hasham Javed) — 18y/o cybersecurity student from Pakistan. CTF player, red team learner, Python tool builder, ethical hacker. Open to remote internships in UK. Kali Linux, penetration testing, OSINT, bug bounty.">
+<meta name="keywords" content="Zudio, zudio infosec, cybersecurity student, ethical hacker, CTF player, penetration testing, red team, Kali Linux, OSINT, bug bounty, hacking blog, cyber security blog, PicoCTF, TryHackMe, HackTheBox, Python security tools, offensive security, Pakistan cybersecurity, ethical hacking tutorials, CTF writeups, recon framework, hacking form">
+<meta name="author" content="Hasham Javed">
+<meta property="og:title" content="Zudio | Cybersecurity Student & CTF Player">
+<meta property="og:description" content="Ethical hacking, CTF writeups, offensive tools. Based in Pakistan, targeting UK cybersecurity internships.">
+<meta property="og:url" content="https://zudio-infosec.github.io/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zudio | Cybersecurity Student">
+<meta name="twitter:description" content="CTF player, red team learner, tool builder. Open to remote UK internships.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --cyan: #00e5ff;
+    --red: #ff003c;
+    --dark: #050a05;
+    --darker: #020602;
+    --panel: rgba(0, 255, 65, 0.04);
+    --border: rgba(0, 255, 65, 0.2);
+    --text: #b0c4b0;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
 
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 16px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  #cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+    box-shadow: 0 0 10px var(--green), 0 0 30px rgba(0,255,65,0.4);
+  }
+  #cursor-trail {
+    position: fixed;
+    width: 28px; height: 28px;
+    border: 1px solid rgba(0,255,65,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
 
   /* Matrix canvas background */
   #matrix-bg {
@@ -49,9 +115,9 @@
     color: var(--green);
     text-decoration: none;
     letter-spacing: 3px;
-    
+    text-shadow: 0 0 20px var(--green);
   }
-  .nav-logo span { color: var(--green); }
+  .nav-logo span { color: var(--cyan); }
   .nav-links { display: flex; gap: 30px; list-style: none; position: absolute; left: 50%; transform: translateX(-50%); }
   .nav-links a {
     color: var(--text);
@@ -120,7 +186,7 @@
     opacity: 0;
     animation: fadeUp 0.7s ease 0.5s forwards;
   }
-  .hero-title .accent { color: var(--green);  }
+  .hero-title .accent { color: var(--green); text-shadow: 0 0 30px var(--green); }
   .hero-title .glitch {
     position: relative;
     display: inline-block;
@@ -134,12 +200,12 @@
     background: var(--dark);
   }
   .hero-title .glitch::before {
-    color: var(--green);
+    color: var(--cyan);
     animation: glitch1 4s infinite;
     clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
   }
   .hero-title .glitch::after {
-    color: var(--green);
+    color: var(--red);
     animation: glitch2 4s infinite;
     clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
   }
@@ -161,7 +227,7 @@
   .hero-sub {
     font-family: var(--mono);
     font-size: 1rem;
-    color: var(--green);
+    color: var(--cyan);
     margin-bottom: 30px;
     opacity: 0;
     animation: fadeUp 0.7s ease 0.7s forwards;
@@ -220,8 +286,8 @@
   }
   .btn:hover::before { left: 0; }
   .btn-primary { color: var(--green); border-color: var(--green); }
-  .btn-primary:hover {  color: var(--dark); background: var(--green); }
-  .btn-secondary { color: var(--green); border-color: var(--green); }
+  .btn-primary:hover { box-shadow: 0 0 20px rgba(0,255,65,0.4); color: var(--dark); background: var(--green); }
+  .btn-secondary { color: var(--cyan); border-color: var(--cyan); }
   .btn-secondary:hover { box-shadow: 0 0 20px rgba(0,229,255,0.3); }
 
   .hero-terminal {
@@ -359,7 +425,7 @@
 
   /* SKILLS */
   #skills-wrap { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
-  .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .skill-category {
     border: 1px solid var(--border);
     padding: 28px;
@@ -368,7 +434,7 @@
   }
   .skill-category:hover {
     border-color: rgba(0,255,65,0.5);
-    
+    box-shadow: 0 0 30px rgba(0,255,65,0.05);
   }
   .skill-cat-title {
     font-family: var(--mono);
@@ -427,7 +493,7 @@
     position: absolute;
     bottom: 0; left: 0;
     width: 100%; height: 1px;
-    background: linear-gradient(90deg, var(--green), var(--green));
+    background: linear-gradient(90deg, var(--green), var(--cyan));
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.4s ease;
@@ -468,7 +534,7 @@
   .project-link {
     font-family: var(--mono);
     font-size: 0.7rem;
-    color: var(--green);
+    color: var(--cyan);
     letter-spacing: 1px;
     transition: color 0.3s;
   }
@@ -534,7 +600,7 @@
   .writeup-cat {
     font-family: var(--mono);
     font-size: 0.65rem;
-    color: var(--green);
+    color: var(--cyan);
     letter-spacing: 1px;
     margin-right: 30px;
   }
@@ -594,7 +660,7 @@
     font-size: 2rem;
     font-weight: 900;
     color: var(--green);
-    
+    text-shadow: 0 0 30px var(--green);
     margin-bottom: 20px;
     letter-spacing: 6px;
   }
@@ -617,7 +683,7 @@
     position: fixed;
     top: 0; left: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--green), var(--green));
+    background: linear-gradient(90deg, var(--green), var(--cyan));
     z-index: 200;
     transition: width 0.1s;
     box-shadow: 0 0 10px var(--green);
@@ -648,11 +714,11 @@
   }
   .boot-line.show { opacity: 1; transform: none; }
   .boot-line.dim { color: rgba(0,255,65,0.3); }
-  .boot-line.cyan { color: var(--green); }
+  .boot-line.cyan { color: var(--cyan); }
   .boot-line.white { color: #fff; font-weight: bold; letter-spacing: 3px; font-size: 1.1rem; }
   .boot-bar-wrap { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
   .boot-bar { width: 220px; height: 3px; background: rgba(0,255,65,0.12); overflow: hidden; }
-  .boot-bar-fill { height: 100%; background: var(--green); width: 0%; transition: width 1s ease;  }
+  .boot-bar-fill { height: 100%; background: var(--green); width: 0%; transition: width 1s ease; box-shadow: 0 0 8px var(--green); }
 
   /* FLOATING TERMINAL BUTTON */
   #float-term-btn {
@@ -667,9 +733,9 @@
     cursor: none;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.3s;
-    
+    box-shadow: 0 0 18px rgba(0,255,65,0.25);
   }
-  #float-term-btn:hover { background: var(--green); color: var(--dark);  transform: scale(1.1); }
+  #float-term-btn:hover { background: var(--green); color: var(--dark); box-shadow: 0 0 36px rgba(0,255,65,0.5); transform: scale(1.1); }
   .ft-tooltip {
     position: absolute; right: 58px;
     background: rgba(2,10,2,0.97); border: 1px solid var(--green);
@@ -690,7 +756,7 @@
     width: 500px; max-width: calc(100vw - 40px);
     border: 1px solid var(--green);
     background: rgba(2,8,2,0.97);
-    
+    box-shadow: 0 0 50px rgba(0,255,65,0.18);
     transform: translateY(16px) scale(0.97);
     opacity: 0; pointer-events: none;
     transition: all 0.3s cubic-bezier(0.34,1.4,0.64,1);
@@ -706,7 +772,7 @@
   .ft-dot.r { background: #ff5f57; } .ft-dot.y { background: #febc2e; } .ft-dot.g { background: #28c840; }
   .ft-title { font-family: var(--mono); font-size: 0.6rem; color: rgba(0,255,65,0.35); letter-spacing: 2px; flex: 1; margin-left: 6px; }
   .ft-close { background: none; border: none; color: rgba(0,255,65,0.35); font-family: var(--mono); font-size: 0.8rem; cursor: none; padding: 0 4px; transition: color 0.2s; }
-  .ft-close:hover { color: var(--green); }
+  .ft-close:hover { color: var(--red); }
   #ft-body {
     padding: 14px 16px; height: 260px; overflow-y: auto;
     font-family: var(--mono); font-size: 0.75rem; line-height: 1.85;
@@ -715,8 +781,8 @@
   #ft-body::-webkit-scrollbar-thumb { background: var(--border); }
   .t-output { color: var(--text); white-space: pre-wrap; }
   .t-output.green { color: var(--green); }
-  .t-output.cyan { color: var(--green); }
-  .t-output.red { color: var(--green); }
+  .t-output.cyan { color: var(--cyan); }
+  .t-output.red { color: var(--red); }
   .t-output.dim { color: rgba(0,255,65,0.3); }
   .t-prompt-line { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
   .t-prompt { color: var(--green); white-space: nowrap; font-size: 0.75rem; }
@@ -763,7 +829,7 @@
     border-bottom: 1px solid rgba(0,255,65,0.05);
   }
   .progress-path li:last-child { border-bottom: none; }
-  .progress-path .pmark { color: var(--green); width: 14px; display: inline-block; text-align: center; }
+  .progress-path .pmark { color: var(--cyan); width: 14px; display: inline-block; text-align: center; }
   .progress-path li.done { color: rgba(0,255,65,0.5); }
   .progress-path li.done .pmark { color: var(--green); }
   .progress-path li.current { color: #fff; }
@@ -771,7 +837,7 @@
   .progress-card-foot { padding-top: 6px; border-top: 1px solid rgba(0,255,65,0.08); }
   .progress-link {
     font-family: var(--mono); font-size: 0.65rem;
-    color: var(--green); letter-spacing: 1.5px;
+    color: var(--cyan); letter-spacing: 1.5px;
     text-decoration: none; text-transform: uppercase;
     transition: color 0.3s;
   }
@@ -887,23 +953,6 @@
     #float-term-btn { display: none; }
     #float-terminal { display: none; }
   }
-
-  .hero-image {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto 24px;
-      border-radius: 8px;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.4s forwards;
-  }
-
-  .about-image-img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.5s forwards;
-  }
 </style>
 </head>
 <body>
@@ -937,8 +986,8 @@
 <div class="scroll-line" id="scroll-line"></div>
 
 <!-- Custom cursor -->
-
-
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
 
 <!-- Matrix background -->
 <canvas id="matrix-bg"></canvas>
@@ -978,17 +1027,17 @@
 
 <!-- HERO -->
 <section id="hero">
-  \1\n    <img src="https://picsum.photos/seed/zudio/1200/400" alt="Cybersecurity background" class="hero-image">
+  <div class="hero-tag">// INITIALIZING PROFILE...</div>
   <h1 class="hero-title">
     <span class="glitch accent" data-text="ZUDIO">ZUDIO</span><br>
     <span style="color:#fff; font-size:0.55em; letter-spacing:4px;">CYBERSECURITY STUDENT</span>
   </h1>
   <div class="hero-sub">
     <span style="color:var(--text)">zudio@kali:~$</span>
-    <span style="color:var(--green)">./</span><span class="typed-text"></span><span class="typed-cursor"></span>
+    <span style="color:var(--cyan)">./</span><span class="typed-text"></span><span class="typed-cursor"></span>
   </div>
   <p class="hero-desc">
-    18-year-old security researcher from Pakistan. Breaking things ethically, documenting the journey, building offensive tools - one commit at a time.
+    18-year-old security researcher from Pakistan. Breaking things ethically, documenting the journey, building offensive tools — one commit at a time.
   </p>
   <div class="hero-btns">
     <a href="#projects-wrap" class="btn btn-primary">View Projects</a>
@@ -997,7 +1046,7 @@
   </div>
   <div class="hero-terminal">
     <div class="t-line">$ whoami</div>
-    <div class="t-line" style="color:var(--green)">zudio - cybersecurity student</div>
+    <div class="t-line" style="color:var(--green)">zudio — cybersecurity student</div>
     <div class="t-line">$ cat /etc/hostname</div>
     <div class="t-line" style="color:var(--green)">kali [pk-gjw]</div>
   </div>
@@ -1012,10 +1061,10 @@
   </div>
   <div id="about">
     <div class="about-text reveal">
-      <p>It started with a YouTube short about a <strong>Raspberry Pi Zero 2W</strong> running Kali Linux. I didn't know what Linux was - but I ordered one anyway.</p>
+      <p>It started with a YouTube short about a <strong>Raspberry Pi Zero 2W</strong> running Kali Linux. I didn't know what Linux was — but I ordered one anyway.</p>
       <p>That impulse buy turned into two years of learning: from my first <strong>ls</strong> and <strong>cd</strong> commands, to phishing an Instagram account (with permission), to building a full lab with VMs running Windows 7, 10, and 11.</p>
       <p>Today I'm focused on <strong>ethical hacking</strong>, CTF competitions, and building offensive security tools. The goal is clear: become a professional red teamer and work in UK cybersecurity.</p>
-      <blockquote>"To outsmart malicious hackers, you need to think like them." - NetworkChuck</blockquote>
+      <blockquote>"To outsmart malicious hackers, you need to think like them." — NetworkChuck</blockquote>
     </div>
     <div class="stat-grid reveal reveal-delay-1">
       <div class="stat-card">
@@ -1089,7 +1138,7 @@
     <a href="https://github.com/zudio-infosec/ctf-writeups" target="_blank" class="project-card reveal reveal-delay-2">
       <div class="project-tag">Security // Research</div>
       <div class="project-name">CTF WRITEUPS</div>
-      <p class="project-desc">Documented solutions for PicoCTF and TryHackMe challenges. Learn-in-public approach - sharing techniques, thought processes, and building a knowledge base.</p>
+      <p class="project-desc">Documented solutions for PicoCTF and TryHackMe challenges. Learn-in-public approach — sharing techniques, thought processes, and building a knowledge base.</p>
       <div class="project-footer">
         <span class="project-link" id="writeup-count" data-loading>…</span>
         <div class="project-arrow">→</div>
@@ -1115,13 +1164,13 @@
                    letter-spacing:1px; font-size:0.95rem;">
         CYBERSECURITY HACKATHON 2026
       </span>
-      <span style="color:var(--green); font-family:var(--mono); font-size:0.75rem;
-                   border:1px solid var(--green); padding:2px 8px; border-radius:2px;">
+      <span style="color:var(--cyan); font-family:var(--mono); font-size:0.75rem;
+                   border:1px solid var(--cyan); padding:2px 8px; border-radius:2px;">
         11 CHALLENGES SOLVED
       </span>
     </div>
     <p style="color:#aaa; font-family:var(--mono); font-size:0.85rem; margin:0 0 12px 0;">
-      3-day workshop - web, network, crypto, Android reversing, and DFIR.
+      3-day workshop — web, network, crypto, Android reversing, and DFIR.
       Read the full breakdown and grab the individual writeups →
     </p>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1133,32 +1182,21 @@
     </div>
   </a>
   <div class="writeups-list">
-    <!-- Add this as the FIRST item inside <div class="writeups-list">,
-     right after the opening <div class="writeups-list"> tag
-     (before the existing OTP Bypass item). Renumber the existing
-     items' reveal-delay classes by +1 (delay-1→2, delay-2→3, delay-3→4)
-     so the stagger animation still counts up in order. -->
-    <a href="https://github.com/zudio-infosec/ctf-writeups/tree/main/hackathon-2026" target="_blank" class="writeup-item reveal reveal-delay-1">
-      <span class="writeup-platform">Hackathon 2026</span>
-      <span class="writeup-title">11 Challenges - Web, Network, Crypto, Android, DFIR</span>
-      <span class="writeup-cat">MULTI</span>
-      <span class="writeup-date">SEP 2026</span>
-    </a>
     <a href="https://github.com/zudio-infosec/ctf-writeups/blob/main/picoctf-otp-bypass.md" target="_blank" class="writeup-item reveal reveal-delay-1">
       <span class="writeup-platform">PicoCTF</span>
-      <span class="writeup-title">OTP Bypass - Web Exploitation</span>
+      <span class="writeup-title">OTP Bypass — Web Exploitation</span>
       <span class="writeup-cat">WEB</span>
       <span class="writeup-date">APR 2026</span>
     </a>
     <a href="https://github.com/zudio-infosec/ctf-writeups/blob/main/tryhackme-http-in-detail.md" target="_blank" class="writeup-item reveal reveal-delay-2">
       <span class="writeup-platform">TryHackMe</span>
-      <span class="writeup-title">HTTP in Detail - Networking</span>
+      <span class="writeup-title">HTTP in Detail — Networking</span>
       <span class="writeup-cat">NETWORKING</span>
       <span class="writeup-date">APR 2026</span>
     </a>
     <a href="https://github.com/zudio-infosec/ctf-writeups/blob/main/picoctf-multi-layer-hash-cracking.md" target="_blank" class="writeup-item reveal reveal-delay-3">
       <span class="writeup-platform">PicoCTF</span>
-      <span class="writeup-title">Multi-Layer Hash Cracking - Cryptography</span>
+      <span class="writeup-title">Multi-Layer Hash Cracking — Cryptography</span>
       <span class="writeup-cat">CRYPTO</span>
       <span class="writeup-date">APR 2026</span>
     </a>
@@ -1174,22 +1212,22 @@
   </div>
   <div class="platforms-grid">
     <a href="https://tryhackme.com/p/zudio.infosec" target="_blank" class="platform-card reveal reveal-delay-1">
-      <span class="platform-icon"><i class="ph-bold ph-target"></i></span>
+      <span class="platform-icon">🎯</span>
       <div class="platform-name">TRYHACKME</div>
-      <div class="platform-status">ACTIVE - zudio.infosec</div>
+      <div class="platform-status">ACTIVE — zudio.infosec</div>
     </a>
     <a href="https://portswigger.net/web-security" target="_blank" class="platform-card reveal reveal-delay-2">
-      <span class="platform-icon"><i class="ph-bold ph-spider"></i></span>
+      <span class="platform-icon">🕷️</span>
       <div class="platform-name">PORTSWIGGER</div>
       <div class="platform-status">WEB SECURITY LABS</div>
     </a>
     <a href="https://picoctf.org" target="_blank" class="platform-card reveal reveal-delay-3">
-      <span class="platform-icon"><i class="ph-bold ph-flag"></i></span>
+      <span class="platform-icon">🚩</span>
       <div class="platform-name">PICOCTF</div>
       <div class="platform-status">CTF COMPETITIONS</div>
     </a>
     <a href="https://www.hackthebox.com" target="_blank" class="platform-card reveal reveal-delay-4">
-      <span class="platform-icon"><i class="ph-bold ph-box"></i></span>
+      <span class="platform-icon">📦</span>
       <div class="platform-name">HACKTHEBOX</div>
       <div class="platform-status">FREE TIER</div>
     </a>
@@ -1206,7 +1244,7 @@
   <div class="progress-grid">
     <div class="progress-card reveal reveal-delay-1">
       <div class="progress-card-head">
-        <span class="progress-platform"><i class="ph-bold ph-target"></i> TryHackMe - Level 2 Path</span>
+        <span class="progress-platform">🎯 TryHackMe — Level 2 Path</span>
         <span class="progress-status">in progress</span>
       </div>
       <ol class="progress-path">
@@ -1223,11 +1261,11 @@
     </div>
     <div class="progress-card reveal reveal-delay-2">
       <div class="progress-card-head">
-        <span class="progress-platform"><i class="ph-bold ph-spider"></i> PortSwigger - Web Security Academy</span>
+        <span class="progress-platform">🕷️ PortSwigger — Web Security Academy</span>
         <span class="progress-status">labs ongoing</span>
       </div>
       <ol class="progress-path">
-        <li class="done"><span class="pmark">✓</span> SQLi Labs 1-5</li>
+        <li class="done"><span class="pmark">✓</span> SQLi Labs 1–5</li>
         <li class="current"><span class="pmark">▸</span> SQLi Lab 6 (PostgreSQL)</li>
         <li><span class="pmark">○</span> Access Control</li>
         <li><span class="pmark">○</span> File Upload Vulns</li>
@@ -1249,7 +1287,7 @@
 <div id="float-terminal">
   <div class="ft-titlebar">
     <div class="ft-dot r"></div><div class="ft-dot y"></div><div class="ft-dot g"></div>
-    <span class="ft-title">zudio@kali - bash</span>
+    <span class="ft-title">zudio@kali — bash</span>
     <button class="ft-close" onclick="toggleTerm()">✕</button>
   </div>
   <div id="ft-body">
@@ -1387,3 +1425,283 @@
       } else { window.location.href=href; }
     });
   });
+
+  // ── CUSTOM CURSOR ──
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  let mx = -100, my = -100, tx = -100, ty = -100;
+  cursor.style.left = '-100px'; cursor.style.top = '-100px';
+  trail.style.left = '-100px'; trail.style.top = '-100px';
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  setInterval(() => {
+    tx += (mx - tx) * 0.15;
+    ty += (my - ty) * 0.15;
+    trail.style.left = tx + 'px';
+    trail.style.top = ty + 'px';
+  }, 16);
+
+  // ── SCROLL PROGRESS ──
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    document.getElementById('scroll-line').style.width = (scrolled * 100) + '%';
+  });
+
+  // ── SCROLL REVEAL ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        el.target.querySelectorAll('.skill-bar').forEach(bar => {
+          bar.style.width = bar.dataset.width + '%';
+        });
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  document.querySelectorAll('.skill-category').forEach(el => observer.observe(el));
+
+  // ── MATRIX RAIN ──
+  const canvas = document.getElementById('matrix-bg');
+  const ctx = canvas.getContext('2d');
+  const fontSize = 13;
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&<>{}[]';
+  let cols, drops;
+  function initMatrix() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols = Math.floor(canvas.width / fontSize);
+    drops = Array(cols).fill(1);
+  }
+  initMatrix();
+  window.addEventListener('resize', initMatrix);
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(5,10,5,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff41';
+    ctx.font = fontSize + 'px Share Tech Mono, monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  setInterval(drawMatrix, 55);
+
+  // ── TYPING ANIMATION ──
+  const roles = ['ctf_player.sh', 'recon_tool.py', 'red_teamer.exe', 'osint_hunter.sh', 'tool_builder.py'];
+  let rIdx = 0, cIdx = 0, deleting = false;
+  const typedEl = document.querySelector('.typed-text');
+  function typeLoop() {
+    if (!typedEl) return;
+    const word = roles[rIdx];
+    if (!deleting) {
+      typedEl.textContent = word.slice(0, ++cIdx);
+      if (cIdx === word.length) { deleting = true; setTimeout(typeLoop, 1800); return; }
+    } else {
+      typedEl.textContent = word.slice(0, --cIdx);
+      if (cIdx === 0) { deleting = false; rIdx = (rIdx + 1) % roles.length; setTimeout(typeLoop, 400); return; }
+    }
+    setTimeout(typeLoop, deleting ? 60 : 100);
+  }
+  setTimeout(typeLoop, 3500); // start after boot screen
+
+  // ── FLOATING TERMINAL ──
+  let termOpen = false;
+  function toggleTerm() {
+    termOpen = !termOpen;
+    document.getElementById('float-terminal').classList.toggle('open', termOpen);
+    if (termOpen) setTimeout(() => document.getElementById('term-input').focus(), 300);
+  }
+
+  const ftBody = document.getElementById('ft-body');
+  const termInput = document.getElementById('term-input');
+  const cmdHistory = [];
+  let histIdx = -1;
+
+  const commands = {
+    help: () => [
+      {t:'green', v:'Available commands:'},
+      {t:'cyan',  v:'  whoami      — who is zudio?'},
+      {t:'cyan',  v:'  skills      — languages, tools & domains'},
+      {t:'cyan',  v:'  projects    — built projects'},
+      {t:'cyan',  v:'  writeups    — CTF writeups'},
+      {t:'cyan',  v:'  contact     — links & email'},
+      {t:'cyan',  v:'  status      — current activity & goals'},
+      {t:'cyan',  v:'  social      — all social platforms'},
+      {t:'cyan',  v:'  videos      — YouTube content'},
+      {t:'cyan',  v:'  clear       — clear terminal'},
+      {t:'dim',   v:'  ls / pwd / uname / date — system info'},
+      {t:'dim',   v:'─────────────────────────────────────'},
+    ],
+    whoami: () => [
+      {t:'green', v:'zudio (Hasham Javed)'},
+      {t:'',      v:'Age:      18 y/o — Gujranwala, Pakistan'},
+      {t:'',      v:'Study:    ICS 2nd Year'},
+      {t:'',      v:'OS:       Kali Linux (daily driver)'},
+      {t:'',      v:'Focus:    Ethical hacking, CTFs, red team tooling'},
+      {t:'',      v:'Goal:     UK cybersecurity internship / career'},
+    ],
+    skills: () => [
+      {t:'green', v:'[LANGUAGES]'},
+      {t:'',      v:'  Python ████████░░   Bash ███████░░░   C++ █████░░░░░'},
+      {t:'green', v:'[TOOLS]'},
+      {t:'',      v:'  Nmap • Burp Suite • Metasploit • Wireshark • Amass'},
+      {t:'',      v:'  Nikto • ExifTool • SEToolkit • AhMyth RAT'},
+      {t:'green', v:'[DOMAINS]'},
+      {t:'',      v:'  OSINT • Web Recon • Phishing • Windows Exploitation'},
+      {t:'green', v:'[LAB]'},
+      {t:'',      v:'  VirtualBox: Windows 7 / 10 / 11 VMs'},
+    ],
+    projects: () => [
+      {t:'green', v:'[01] zudio-recon-framework'},
+      {t:'',      v:'     Multi-threaded Python recon tool'},
+      {t:'',      v:'     nmap • whois • amass • dig • nikto • curl'},
+      {t:'cyan',  v:'     → github.com/zudio-infosec/zudio-recon-framework'},
+      {t:'green', v:'[02] ctf-writeups'},
+      {t:'',      v:'     multiple writeups — PicoCTF & TryHackMe'},
+      {t:'cyan',  v:'     → github.com/zudio-infosec/ctf-writeups'},
+    ],
+    writeups: () => [
+      {t:'dim',   v:'  PLATFORM      TITLE                                  DATE'},
+      {t:'dim',   v:'  ──────────────────────────────────────────────────────────'},
+      {t:'cyan',  v:'  [PicoCTF]     OTP Bypass — Web Exploitation          Apr 2026'},
+      {t:'cyan',  v:'  [TryHackMe]   HTTP in Detail — Networking             Apr 2026'},
+      {t:'cyan',  v:'  [PicoCTF]     Multi-Layer Hash Cracking — Crypto      Apr 2026'},
+      {t:'dim',   v:'  + 4 more → github.com/zudio-infosec/ctf-writeups'},
+    ],
+    contact: () => [
+      {t:'green', v:'── CONTACT ──'},
+      {t:'',      v:'  Email     →  zudio001@proton.me'},
+      {t:'',      v:'  LinkedIn  →  linkedin.com/in/hasham-javed-a03424400'},
+      {t:'',      v:'  GitHub    →  github.com/zudio-infosec'},
+      {t:'',      v:'  Location  →  Gujranwala, Punjab, Pakistan'},
+      {t:'cyan',  v:'  Open to remote internships — UK preferred'},
+    ],
+    status: () => [
+      {t:'green', v:'── CURRENT STATUS ──'},
+      {t:'green', v:'  ● ACTIVE'},
+      {t:'',      v:'  Learning:  OSINT, Web Exploitation, Python tooling'},
+      {t:'',      v:'  Platform:  TryHackMe — active, building L2 path'},
+      {t:'',      v:'  Building:  zudio-recon-framework v2'},
+      {t:'cyan',  v:'  Target:    UK cybersecurity internship 2026'},
+    ],
+    social: () => [
+      {t:'green', v:'── SOCIAL LINKS ──'},
+      {t:'cyan',  v:'  GitHub     →  github.com/zudio-infosec'},
+      {t:'cyan',  v:'  LinkedIn   →  linkedin.com/in/hasham-javed-a03424400'},
+      {t:'cyan',  v:'  TryHackMe  →  tryhackme.com/p/zudio.infosec'},
+      {t:'cyan',  v:'  Instagram  →  instagram.com/zudio.infosec'},
+      {t:'cyan',  v:'  YouTube    →  youtube.com/@zudio-infosec'},
+      {t:'cyan',  v:'  Email      →  zudio001@proton.me'},
+    ],
+    videos: () => [
+      {t:'green', v:'── YOUTUBE: Zudio-infosec ──'},
+      {t:'cyan',  v:'  [1] Simulating SEToolkit — Social Engineering Attacks'},
+      {t:'',      v:'      Phishing demo in controlled lab environment'},
+      {t:'cyan',  v:'  [2] AhMyth RAT — Remote Access Trojan Demo'},
+      {t:'',      v:'      Testing on personal equipment in isolated lab'},
+      {t:'dim',   v:'  → youtube.com/@zudio-infosec'},
+    ],
+    clear: () => '__clear__',
+    ls: () => [{t:'cyan', v:'projects/   writeups/   skills.txt   contact.md   videos/'}],
+    pwd: () => [{t:'green', v:'/home/zudio'}],
+    uname: () => [{t:'', v:'Linux kali 6.x kali-amd64 GNU/Linux — MSI Modern 14 C12MO'}],
+    date: () => [{t:'green', v: new Date().toString()}],
+  };
+
+  function printLines(lines) {
+    if (lines === '__clear__') {
+      const pl = ftBody.querySelector('.t-prompt-line');
+      ftBody.innerHTML = '';
+      ftBody.appendChild(pl);
+      return;
+    }
+    const pl = ftBody.querySelector('.t-prompt-line');
+    lines.forEach(({t, v}) => {
+      const d = document.createElement('div');
+      d.className = 't-output' + (t ? ' ' + t : '');
+      d.textContent = v;
+      ftBody.insertBefore(d, pl);
+    });
+    ftBody.scrollTop = ftBody.scrollHeight;
+  }
+
+  function printCmd(cmd) {
+    const pl = ftBody.querySelector('.t-prompt-line');
+    const echo = document.createElement('div');
+    echo.className = 't-output';
+    const prompt = document.createElement('span');
+    prompt.style.color = 'var(--green)';
+    prompt.textContent = 'zudio@kali:~$ ';
+    const cmdText = document.createElement('span');
+    cmdText.textContent = cmd;
+    echo.appendChild(prompt);
+    echo.appendChild(cmdText);
+    ftBody.insertBefore(echo, pl);
+  }
+
+  termInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const cmd = termInput.value.trim().toLowerCase();
+      termInput.value = '';
+      if (!cmd) return;
+      cmdHistory.unshift(cmd);
+      histIdx = -1;
+      printCmd(cmd);
+      if (commands[cmd]) printLines(commands[cmd]());
+      else printLines([{t:'red', v:`command not found: ${cmd} — try 'help'`}]);
+    }
+    if (e.key === 'ArrowUp') { histIdx = Math.min(histIdx+1, cmdHistory.length-1); termInput.value = cmdHistory[histIdx]||''; e.preventDefault(); }
+    if (e.key === 'ArrowDown') { histIdx = Math.max(histIdx-1, -1); termInput.value = histIdx===-1?'':cmdHistory[histIdx]; e.preventDefault(); }
+    if (e.key === 'Tab') { e.preventDefault(); const m = Object.keys(commands).find(k=>k.startsWith(termInput.value.toLowerCase())); if(m) termInput.value=m; }
+    if (e.key === 'Escape') toggleTerm();
+  });
+  document.getElementById('float-terminal').addEventListener('click', () => termInput.focus());
+
+  // ── LIVE WRITEUP COUNT (GitHub Contents API, no auth, CORS open) ──
+  (async function loadWriteupCount() {
+    const el = document.getElementById('writeup-count');
+    if (!el) return;
+    try {
+      const r = await fetch('https://api.github.com/repos/zudio-infosec/ctf-writeups/contents/');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const files = await r.json();
+      const count = files.filter(f =>
+        f.type === 'file' && f.name.endsWith('.md') && f.name.toLowerCase() !== 'readme.md'
+      ).length;
+      el.textContent = count + (count === 1 ? ' writeup published' : ' writeups published');
+      el.removeAttribute('data-loading');
+    } catch (e) {
+      el.textContent = '— writeups (offline)';
+      el.removeAttribute('data-loading');
+    }
+  })();
+
+  // ── COUNTER ANIMATION ──
+  function animateCounters() {
+    document.querySelectorAll('.stat-num').forEach(el => {
+      const target = parseInt(el.textContent);
+      if (isNaN(target)) return;
+      const hasPlus = el.textContent.includes('+');
+      let current = 0;
+      const step = target / 40;
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= target) { el.textContent = target + (hasPlus ? '+' : ''); clearInterval(interval); }
+        else el.textContent = Math.floor(current);
+      }, 30);
+    });
+  }
+  const statObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) { animateCounters(); statObserver.disconnect(); }
+  }, { threshold: 0.3 });
+  const statGrid = document.querySelector('.stat-grid');
+  if (statGrid) statObserver.observe(statGrid);
+</script>
+</body>
+</html>
