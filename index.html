@@ -988,6 +988,18 @@
     border-color: var(--green);
   }
 
+  /* RESPECT REDUCED MOTION PREFERENCE */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    #matrix-bg { display: none; }
+    body::after { display: none; }
+  }
+
 </style>
 </head>
 <body>
@@ -1079,6 +1091,7 @@
     <a href="#projects-wrap" class="btn btn-primary">View Projects</a>
     <a href="https://github.com/zudio-infosec" target="_blank" class="btn btn-secondary">GitHub →</a>
     <a href="https://tryhackme.com/p/zudio.infosec" target="_blank" class="btn btn-secondary">TryHackMe →</a>
+    <a href="/resume.pdf" target="_blank" class="btn btn-secondary">Resume ↓</a>
   </div>
   <div class="hero-terminal">
     <div class="t-line">$ whoami</div>
@@ -1104,8 +1117,8 @@
     </div>
     <div class="stat-grid reveal reveal-delay-1">
       <div class="stat-card">
-        <div class="stat-num">2</div>
-        <div class="stat-label">YEARS LEARNING</div>
+        <div class="stat-num">2023</div>
+        <div class="stat-label">LEARNING SINCE</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">6+</div>
@@ -1116,8 +1129,8 @@
         <div class="stat-label">VMs IN LAB</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">UK</div>
-        <div class="stat-label">TARGET MARKET</div>
+        <div class="stat-num">∞</div>
+        <div class="stat-label">OPEN TO RELOCATE</div>
       </div>
     </div>
   </div>
@@ -1268,6 +1281,10 @@
       <div class="platform-status">FREE TIER</div>
     </a>
   </div>
+
+  <div class="thm-badge-container reveal">
+    <script src="https://tryhackme.com/badge/t/efb33394ac2323ddbc15e178343a2284a4816c92713a02655be65dc1df58650754fb82120b5f7c8ad91f961f469965c8"></script>
+  </div>
 </div>
 
 <!-- PROGRESS -->
@@ -1313,6 +1330,8 @@
   </div>
 </div>
 
+  <script src="https://tryhackme.com/badge/t/180907f5dd70d22e51513228a19b53bde02997303e877623e03f649c51b9848337e9f7275c8e54c8192bce2ace501d5a"></script>
+
 <!-- FLOATING TERMINAL BUTTON -->
 <button id="float-term-btn" title="Open Terminal" onclick="toggleTerm()">
   <span class="ft-tooltip">OPEN TERMINAL</span>
@@ -1348,6 +1367,7 @@
     <a href="https://tryhackme.com/p/zudio.infosec" target="_blank" rel="me" class="social-pill">⚑ TryHackMe</a>
     <a href="https://www.hackthebox.com/profile/1961817" target="_blank" rel="me" class="social-pill">▣ Hack The Box</a>
     <a href="mailto:zudio001@proton.me" title="zudio001@proton.me" class="social-pill">✉ Email</a>
+    <a href="/resume.pdf" target="_blank" class="social-pill">⬇ Resume</a>
   </div>
   <div class="footer-copy">© 2026 HASHAM JAVED (ZUDIO) • AUTHORIZED SECURITY RESEARCH • OPEN TO INTERNSHIPS</div>
 </footer>
