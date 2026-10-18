@@ -966,6 +966,29 @@
     #float-term-btn { display: none; }
     #float-terminal { display: none; }
   }
+  .thm-badge-container {
+    text-align: center;
+    margin: 40px 0;
+    padding: 20px;
+    transition: all 0.4s ease;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  .thm-badge-container:hover {
+    background: rgba(0, 255, 65, 0.05);
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+    transform: scale(1.02);
+  }
+  .thm-badge-img {
+    max-width: 400px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.3s;
+  }
+  .thm-badge-container:hover .thm-badge-img {
+    border-color: var(--green);
+  }
+
 </style>
 </head>
 <body>
