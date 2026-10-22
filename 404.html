@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>404 // Not Found | Zudio</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="icon" href="/zudio-logo.png" type="image/png">
+<link rel="apple-touch-icon" href="/zudio-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +32,41 @@
   }
   a:hover { background: var(--green); color: var(--dark); }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* SVG brand icons (platform cards + footer pills) */
+  .plat-icon {
+    fill: currentColor;
+    color: var(--green);
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .platform-card:hover .plat-icon { transform: scale(1.12); }
+  .pill-icon {
+    fill: currentColor;
+    vertical-align: -2px;
+    margin-right: 5px;
+  }
+  .social-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .social-pill:hover .pill-icon { color: var(--green); }
 </style>
+<meta property="og:title" content="Page Not Found | Zudio">
+<meta property="og:description" content="This route does not exist on the network. Head back to the portfolio, the writeups, or the blog.">
+<meta property="og:url" content="https://zudio-infosec.github.io/404.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Page Not Found | Zudio">
+<meta name="twitter:description" content="This route does not exist on the network.">
+<meta property="og:image" content="https://zudio-infosec.github.io/og-404.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Page not found - Zudio">
+<meta name="twitter:image" content="https://zudio-infosec.github.io/og-404.png">
+<meta name="twitter:image:alt" content="Page not found - Zudio">
 </head>
 <body>
   <h1>404</h1>
